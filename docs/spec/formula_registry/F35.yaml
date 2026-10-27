@@ -1,0 +1,26 @@
+id: F35
+name: "Seam ratio"
+family: "Trends and seam tests"
+layer: "Validation"
+status_v1: E
+status_v2: "REVISE"
+purpose: "How much of the instrument step remains after harmonisation."
+equation_v1: "R_{\\mathrm{seam}} = \\frac{|H_{\\mathrm{after}} - H_{\\mathrm{before}}|}{|V_{\\mathrm{after,raw}} - M_{\\mathrm{before}}|}"
+equation_v2: "R_{\\mathrm{seam}}=\\frac{|\\overline{\\log H}_{2012\\text{\u2013}14}-\\overline{\\log H}_{2009\\text{\u2013}11}|}{|\\overline{\\log V}_{2012\\text{\u2013}14}-\\overline{\\log M}_{2009\\text{\u2013}11}|}\\ \\text{with bootstrap CI and placebo seams}"
+inputs:
+  - {symbol: "H, V, M", meaning: "harmonised, VIIRS raw, MODIS raw", unit: "cell-days"}
+assumptions:
+  - "No real change exactly at the seam."
+audit: {verdict: "REVISE", finding: "One-year-to-one-year comparison mixes real interannual change with the instrument step. Use 3-year windows, log scale, interval, and compare against placebo seams."}
+worked_example: "seam_ratio(100, 260, 104.68) = 0.029 (RUN)."
+pseudocode: |
+  see v2
+edge_cases:
+  - "Denominator 0 \u2192 undefined (v1 returns 0.0 \u2014 fix to None)."
+tests:
+  - "placebo seams distribution reported"
+ui: "Home stat + Validation tile."
+sources:
+  - "Kiln Watch README (self-reported 2.9%)"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

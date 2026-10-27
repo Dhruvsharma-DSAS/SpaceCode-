@@ -1,0 +1,26 @@
+id: F23
+name: "Bland\u2013Altman agreement"
+family: "Calibration between sensors"
+layer: "Validation"
+status_v1: T
+status_v2: "REVISE"
+purpose: "Shows bias and agreement limits between harmonised MODIS and observed VIIRS in held-out overlap years."
+equation_v1: "\\bar d = \\overline{a-b},\\qquad \\mathrm{LoA} = \\bar d \\pm 1.96\\,\\mathrm{SD}(a-b)"
+equation_v2: "d_t = \\log(a_t+0.5)-\\log(b_t+0.5),\\ \\ a=\\text{harmonised MODIS},\\ b=\\text{observed VIIRS};\\ \\bar d \\pm 1.96\\,\\mathrm{SD}(d)\\ \\text{on held-out years}"
+inputs:
+  - {symbol: "a, b", meaning: "two measurements of the same stratum", unit: "same units"}
+assumptions:
+  - "Differences roughly constant across magnitude; otherwise use log scale."
+audit: {verdict: "REVISE", finding: "Fix the sign convention in code, docs and axis label (a \u2212 b). Counts are heteroscedastic, so use log scale. Must be done on held-out data, not the fit years."}
+worked_example: "a=[10,12,15], b=[8,13,12] \u2192 bias +1.33 (RUN)."
+pseudocode: |
+  d = log(a+.5)-log(b+.5); bias=d.mean()
+edge_cases:
+  - "n < 8 \u2192 do not draw limits."
+tests:
+  - "sign test: a>b everywhere \u2192 bias > 0"
+ui: "Validation Bland\u2013Altman plot."
+sources:
+  - "Bland & Altman 1986"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

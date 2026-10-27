@@ -1,0 +1,29 @@
+id: F04
+name: "Area of a grid cell on the sphere"
+family: "Time, space and counting"
+layer: "L1"
+status_v1: P
+status_v2: "RUN / TESTED LOCALLY"
+purpose: "True cell area for densities, area-weighted roll-ups and fair comparison between latitudes. Region area uses the fraction f_g of each cell inside the polygon."
+equation_v1: "A = R^2\\,\\Delta\\lambda\\,(\\sin\\varphi_2 - \\sin\\varphi_1)"
+equation_v2: "A = R^2\\,\\Delta\\lambda\\,(\\sin\\varphi_2 - \\sin\\varphi_1),\\ \\ R = 6371.0088\\ \\mathrm{km};\\quad A_{\\mathrm{region}} = \\sum_g f_g A_g"
+inputs:
+  - {symbol: "R", meaning: "mean Earth radius", unit: "km"}
+  - {symbol: "\u0394\u03bb", meaning: "cell width", unit: "rad"}
+  - {symbol: "\u03c6\u2081, \u03c6\u2082", meaning: "south/north edges", unit: "rad"}
+  - {symbol: "f_g", meaning: "share of cell inside region", unit: "0\u20131"}
+assumptions:
+  - "Sphere; WGS84 ellipsoid differs by <0.5% at these sizes."
+audit: {verdict: "OK + VALIDATED", finding: "RUN here on real Natural Earth polygons: gridded areas Punjab 50,444 km\u00b2, Haryana 43,997 km\u00b2, Delhi 1,481 km\u00b2, Mato Grosso 906,656 km\u00b2, NSW 802,467 km\u00b2 \u2014 close to published state areas (Punjab \u224850,362, Haryana \u224844,212 km\u00b2)."}
+worked_example: "0.1\u00b0 cell at 30.9\u201331.0\u00b0N: 106.0 km\u00b2; at the equator 123.6 km\u00b2; at 60\u00b0N 61.7 km\u00b2; at 89.9\u00b0N 0.108 km\u00b2."
+pseudocode: |
+  A = R*R*radians(d)*(sin(radians(lat+d)) - sin(radians(lat)))
+edge_cases:
+  - "H3 cells are not equal-area either; measure, do not assume."
+tests:
+  - "sum of all cells == 4\u03c0R\u00b2 \u00b1 0.01%"
+ui: "Explorer inspector 'area', density colour mode."
+sources:
+  - "Spherical area element R\u00b2 cos\u03c6 d\u03c6 d\u03bb"
+changelog:
+  - '2026-10-27 V2 audit: OK + VALIDATED'

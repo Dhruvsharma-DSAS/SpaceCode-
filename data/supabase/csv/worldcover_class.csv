@@ -1,0 +1,12 @@
+value,class,role_in_L2
+10,Tree cover,forest
+20,Shrubland,wildland
+30,Grassland,wildland
+40,Cropland,crop
+50,Built-up,industrial/urban context
+60,Bare / sparse vegetation,other
+70,Snow and ice,other
+80,Permanent water bodies,mask
+90,Herbaceous wetland,wildland
+95,Mangroves,forest
+100,Moss and lichen,other

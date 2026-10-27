@@ -1,0 +1,26 @@
+id: F37
+name: "Benjamini\u2013Hochberg false discovery rate"
+family: "Trends and seam tests"
+layer: "L4"
+status_v1: T
+status_v2: "OK"
+purpose: "When thousands of cells are tested for trends, keeps the share of false 'significant' cells near \u03b1."
+equation_v1: "\\text{reject } H_{(i)}\\ \\text{for } i \\le \\max\\{ i : p_{(i)} \\le \\tfrac{i}{m}\\alpha \\}"
+equation_v2: "\\text{same; } m = \\text{number of cells actually tested (with enough data)}; \\text{BY variant if spatially dependent}"
+inputs:
+  - {symbol: "m", meaning: "tests", unit: "-"}
+assumptions:
+  - "Independent or positively dependent tests."
+audit: {verdict: "OK", finding: "Correct. Define m honestly (cells with data)."}
+worked_example: "94 nominal \u2192 53 after BH (v1 synthetic test)."
+pseudocode: |
+  see chronos_core.benjamini_hochberg
+edge_cases:
+  - "Spatial correlation: use BY or cluster-level tests."
+tests:
+  - "monotone rejection set"
+ui: "Explorer trend map 'FDR 5%'."
+sources:
+  - "Benjamini & Hochberg 1995"
+changelog:
+  - '2026-10-27 V2 audit: OK'

@@ -1,0 +1,26 @@
+id: F33
+name: "Pettitt change-point test"
+family: "Trends and seam tests"
+layer: "Validation"
+status_v1: T
+status_v2: "REVISE"
+purpose: "Finds the single most likely jump year; used to show the 2012 seam before harmonisation and its absence after."
+equation_v1: "U_t = \\sum_{i\\le t}\\sum_{j>t}\\operatorname{sgn}(x_j - x_i),\\quad K = \\max_t |U_t|,\\quad p \\approx 2e^{-6K^2/(n^3+n^2)}"
+equation_v2: "\\text{same, plus placebo distribution: }K\\text{ at random non-sensor years and at 2018/2023 platform additions}"
+inputs:
+  - {symbol: "K", meaning: "max absolute U", unit: "-"}
+assumptions:
+  - "One change point; p approximate."
+audit: {verdict: "REVISE", finding: "A non-significant Pettitt after harmonisation does not prove the seam is gone (low power with 25 points). Combine with placebo years and the seam ratio interval."}
+worked_example: "Synthetic break at year 10 found before, not after (v1 must-pass test)."
+pseudocode: |
+  for t: U_t = ...; K = max |U|
+edge_cases:
+  - "Real changes around 2012 (policy, weather) confound."
+tests:
+  - "detects planted break; placebo false-positive rate \u2248 \u03b1"
+ui: "Validation seam tile."
+sources:
+  - "Pettitt 1979"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

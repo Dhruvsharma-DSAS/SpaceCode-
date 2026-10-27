@@ -1,0 +1,28 @@
+id: F45
+name: "Diurnal fraction seen by overpasses"
+family: "Source attribution and blind spot"
+layer: "L3"
+status_v1: T
+status_v2: "FIX"
+purpose: "Scenario tool: if burning follows a diurnal curve g, what share happens inside the times the polar satellites look?"
+equation_v1: "f_{\\mathrm{seen}} = \\sum_{o} \\int_{t_o - w}^{t_o + w} \\frac{1}{\\sigma\\sqrt{2\\pi}}e^{-(t-\\mu)^2/2\\sigma^2}\\,dt"
+equation_v2: "f_{\\mathrm{seen}} = \\int_{\\bigcup_o [t_o-w,\\,t_o+w]} g(t)\\,dt,\\ \\ g\\ \\text{from geostationary/hourly evidence; otherwise labelled SCENARIO}"
+inputs:
+  - {symbol: "t_o", meaning: "observed overpass times (per year)", unit: "h LMST"}
+  - {symbol: "w", meaning: "half-window", unit: "h"}
+  - {symbol: "g", meaning: "diurnal burning density", unit: "1/h"}
+assumptions:
+  - "g is an assumption unless fitted to hourly data (e.g. GEO-KOMPSAT-2A / Meteosat IODC; access unverified)."
+audit: {verdict: "FIX", finding: "RUN here: Aqua and NOAA-20 windows overlap near 13:30; summing integrals gives 54.7% instead of the union 36.6% (\u03bc=13, \u03c3=1.5 h). Result is a scenario, not a measured share of fires."}
+worked_example: "Peak 13:00 vs peak 16:18 scenarios (v1 must-pass 31.6% vs 3.3%) \u2014 teaching."
+pseudocode: |
+  merge windows; integrate once
+edge_cases:
+  - "Windows crossing midnight split in two."
+tests:
+  - "union \u2264 1; union \u2264 naive sum"
+ui: "Blind Spot clock \u2014 dashed 'scenario' style."
+sources:
+  - "iFOREST 2025 (reported shift after 15:00)"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

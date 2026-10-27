@@ -1,0 +1,26 @@
+id: F21
+name: "Log transform of FRP"
+family: "Calibration between sensors"
+layer: "L2"
+status_v1: P
+status_v2: "OK"
+purpose: "Tames the long right tail of fire radiative power before z-scores and quantile maps."
+equation_v1: "y = \\ln(1 + \\mathrm{FRP})"
+equation_v2: "y = \\ln(1+\\mathrm{FRP}/1\\,\\mathrm{MW})"
+inputs:
+  - {symbol: "FRP", meaning: "fire radiative power", unit: "MW"}
+assumptions:
+  - "FRP is comparable only within a sensor; MODIS and VIIRS FRP differ by pixel size and saturation."
+audit: {verdict: "OK", finding: "Correct; units made explicit."}
+worked_example: "1000 MW \u2192 6.909."
+pseudocode: |
+  np.log1p(frp)
+edge_cases:
+  - "Negative/missing FRP \u2192 NULL."
+tests:
+  - "log1p(0)=0"
+ui: "Source page FRP distribution (ECDF)."
+sources:
+  - "-"
+changelog:
+  - '2026-10-27 V2 audit: OK'

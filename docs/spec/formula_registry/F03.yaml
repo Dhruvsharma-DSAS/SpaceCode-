@@ -1,0 +1,33 @@
+id: F03
+name: "Grid cell index"
+family: "Time, space and counting"
+layer: "L1"
+status_v1: E
+status_v2: "RUN / TESTED LOCALLY"
+purpose: "Assigns every detection to a fixed, team-chosen comparison grid (0.1\u00b0). The grid is an analysis decision, not a NASA-provided boundary."
+equation_v1: "i = \\left\\lfloor \\frac{\\varphi + 90}{\\Delta} \\right\\rfloor,\\quad j = \\left\\lfloor \\frac{\\lambda + 180}{\\Delta} \\right\\rfloor"
+equation_v2: "i = \\min\\!\\left(\\left\\lfloor \\mathrm{round}_9\\!\\frac{\\varphi+90}{\\Delta}\\right\\rfloor, \\tfrac{180}{\\Delta}-1\\right),\\quad j = \\min\\!\\left(\\left\\lfloor \\mathrm{round}_9\\!\\frac{\\mathrm{wrap}(\\lambda)+180}{\\Delta}\\right\\rfloor, \\tfrac{360}{\\Delta}-1\\right)"
+inputs:
+  - {symbol: "\u03c6, \u03bb", meaning: "latitude, longitude", unit: "degrees"}
+  - {symbol: "\u0394", meaning: "cell size", unit: "degrees (0.1)"}
+  - {symbol: "round\u2089", meaning: "round to 9 decimals before floor", unit: "-"}
+assumptions:
+  - "Same grid for every sensor and year."
+  - "Longitude wrapped into [\u2212180, 180)."
+audit: {verdict: "FIX", finding: "RUN here: plain floor misassigns 643 of 1,800 latitude edges and 1,287 of 3,600 longitude edges at 0.1\u00b0 because of binary floating point (e.g. 28.1\u00b0N \u2192 row 1180 instead of 1181). Also \u03bb = 180 produces column 3600, outside 0\u20133599."}
+worked_example: "(30.91, 75.85) \u2192 i = \u230a1209.1\u230b = 1209, j = \u230a2558.5\u230b = 2558 \u2192 cell 1209_2558 (matches v1)."
+pseudocode: |
+  row = floor(round((lat + 90) / d, 9))
+  col = floor(round((wrap(lon) + 180) / d, 9))
+  clamp row, col
+edge_cases:
+  - "Poles: lat = 90 clamps to last row."
+  - "Antimeridian regions: store cell sets, not west<east bboxes."
+tests:
+  - "all 0.1\u00b0 edges map to their own row (1800/1800)"
+  - "cell(0,180) == cell(0,-180)"
+ui: "Explorer cell id chip; Studio grid slider."
+sources:
+  - "Team decision (DEC-03)"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

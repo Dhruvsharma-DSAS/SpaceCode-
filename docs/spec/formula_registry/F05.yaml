@@ -1,0 +1,29 @@
+id: F05
+name: "Fire cell-day indicator"
+family: "Time, space and counting"
+layer: "L1"
+status_v1: E
+status_v2: "REVISE"
+purpose: "Turns many pixels into one presence flag per cell per day so that a sensor that draws many small pixels and a sensor that draws a few big pixels are compared on the same question: was any fire detected here today?"
+equation_v1: "c_{g,d} = \\mathbb{1}[\\,n_{g,d} \\ge 1\\,]"
+equation_v2: "c_{s,g,d,\\delta} = \\mathbb{1}[\\,n_{s,g,d,\\delta} \\ge 1\\,]\\ \\text{ (per platform } s\\text{, local day } d\\text{, day/night } \\delta)"
+inputs:
+  - {symbol: "n", meaning: "number of filtered detections", unit: "count"}
+  - {symbol: "s", meaning: "platform (Terra, Aqua, S-NPP, N20, N21)", unit: "-"}
+  - {symbol: "\u03b4", meaning: "D or N", unit: "-"}
+assumptions:
+  - "A cell-day is not a fire event and not burned area."
+  - "Several revisits in one day are deduplicated on purpose."
+audit: {verdict: "REVISE", finding: "v1 deduplicates by (cell, date, sensor) and loses platform and day/night. Keep platform and \u03b4 so day/night calibration (F13) and coverage (F09) are possible."}
+worked_example: "3 VIIRS pixels in one cell on 1 Nov \u2192 c = 1; MODIS 1 pixel \u2192 c = 1."
+pseudocode: |
+  cell_days = det.groupby([cell, local_date, platform, dn]).size() >= 1
+edge_cases:
+  - "Use local date for burning-day questions; UTC date for pass bookkeeping. Write which one."
+tests:
+  - "v1 test: 2 MODIS pts same cell \u2192 1 cell-day; VIIRS \u2192 2 cells"
+ui: "Calendar metric 'cell-days'; Explorer counts."
+sources:
+  - "FireCal / common practice"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

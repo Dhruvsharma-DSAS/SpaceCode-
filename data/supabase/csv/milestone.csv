@@ -1,0 +1,11 @@
+id,name,done_when
+M0,Preservation & inventory,"hashes, source register, tests run"
+M1,Science audit & data contracts,46 registry entries + estimand decision
+M2,Real small-area extraction,1 district x 1 overlap year from archive
+M3,Model comparison,B0-B4 held-out table
+M4,UX decision,palette + 3 boards approved
+M5,Core website,Home/Explorer/Calendar/Sensor/Validation on API
+M6,Optional layers,"L2 abstain, L3 pending states"
+M7,RAG & reports,citation guard tests pass
+M8,Master PDF & docs,this atlas + traceability
+M9,Release checks,"a11y, offline demo, reproducibility"

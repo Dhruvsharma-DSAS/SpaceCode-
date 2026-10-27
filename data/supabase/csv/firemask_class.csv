@@ -1,0 +1,21 @@
+product,value,meaning_catalogue_2026_10_27,exposure_rule_v2,state
+MOD14A1,0,not defined on catalogue page,exclude,unknown
+MOD14A1,1,not processed (obsolete),exclude,unknown
+MOD14A1,2,not processed (other reason),exclude,unknown
+MOD14A1,3,non-fire water,exclude_water,observed_no_fire
+MOD14A1,4,cloud (land or water),not_observable,not_observable
+MOD14A1,5,non-fire land,valid,observed_no_fire
+MOD14A1,6,unknown (land or water),exclude,unknown
+MOD14A1,7,"fire, low confidence",valid,fire_low
+MOD14A1,8,"fire, nominal confidence",valid,fire_nominal
+MOD14A1,9,"fire, high confidence",valid,fire_high
+VNP14A1,0,not processed (no/poor data),exclude,unknown
+VNP14A1,1,not processed (bowtie deletion),exclude,unknown
+VNP14A1,2,unused,exclude,unknown
+VNP14A1,3,water,exclude_water,observed_no_fire
+VNP14A1,4,cloud,not_observable,not_observable
+VNP14A1,5,land,valid,observed_no_fire
+VNP14A1,6,unclassified,exclude,unknown
+VNP14A1,7,low-confidence fire,valid,fire_low
+VNP14A1,8,nominal-confidence fire,valid,fire_nominal
+VNP14A1,9,high-confidence fire,valid,fire_high

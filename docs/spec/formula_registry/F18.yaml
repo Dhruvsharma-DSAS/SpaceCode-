@@ -1,0 +1,30 @@
+id: F18
+name: "Empirical Bayes partial pooling of log k"
+family: "Calibration between sensors"
+layer: "L1"
+status_v1: T
+status_v2: "FIX"
+purpose: "Lets the data decide how much each region borrows from the group, with weights from real precision."
+equation_v1: "\\widehat{\\log k}_r = w_r\\,\\overline{\\log k}_r + (1-w_r)\\,\\mu,\\qquad w_r = \\frac{\\tau^2}{\\tau^2 + s_r^2/n_r}"
+equation_v2: "y_r=\\log\\hat k_r,\\ \\ s_r^2=\\widehat{\\operatorname{Var}}(y_r);\\ \\ \\hat\\tau^2_{\\mathrm{DL}}=\\max\\!\\left(0,\\frac{Q-(R-1)}{c}\\right);\\ \\ w_r=\\frac{\\hat\\tau^2}{\\hat\\tau^2+s_r^2};\\ \\ R\\ge 3"
+inputs:
+  - {symbol: "\u03c4\u00b2", meaning: "between-region variance", unit: "log\u00b2"}
+  - {symbol: "Q", meaning: "Cochran heterogeneity statistic", unit: "-"}
+  - {symbol: "R", meaning: "number of regions", unit: "-"}
+assumptions:
+  - "Regions exchangeable; s_r\u00b2 estimated well."
+audit: {verdict: "FIX", finding: "v1 divides by (R\u22121): undefined for one region; empty groups not guarded. v2 uses DerSimonian\u2013Laird \u03c4\u00b2 with R \u2265 3 guard and returns None otherwise (RUN here)."}
+worked_example: "Regions with 2 months get the lowest weight (v1 must-pass test)."
+pseudocode: |
+  if R < 3: return None
+  tau2 = max(0,(Q-(R-1))/c)
+edge_cases:
+  - "\u03c4\u00b2 = 0 \u2192 full pooling; report it."
+tests:
+  - "EB(1 region) is None"
+  - "weight increases with n"
+ui: "Validation 'pooling weight' column."
+sources:
+  - "DerSimonian & Laird 1986"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

@@ -1,0 +1,30 @@
+id: F27
+name: "Robust anomaly z-score"
+family: "Anomalies and seasons"
+layer: "L4"
+status_v1: ET
+status_v2: "FIX"
+purpose: "How unusual is this month compared with the same month in other years, on the exposure-normalised scale, with the target year left out of its own baseline."
+equation_v1: "z = \\frac{\\ln(1+x) - \\operatorname{med}}{\\max(1.4826\\,\\mathrm{MAD},\\ \\sigma_{\\min})}\\quad(\\text{v1.1: }\\ln r)"
+equation_v2: "y_{t}=\\log\\frac{F_t+0.5}{E_t+1},\\ \\ z_t=\\frac{y_t-\\operatorname{med}(y_{\\mathcal{B}\\setminus t})}{\\max(1.4826\\,\\mathrm{MAD}(y_{\\mathcal{B}\\setminus t}),\\ 0.15)},\\ \\ |\\mathcal{B}|\\ge 8"
+inputs:
+  - {symbol: "F, E", meaning: "fire cell-days and exposure", unit: "count"}
+  - {symbol: "\ud835\udcd1", meaning: "reference years for that calendar month", unit: "-"}
+assumptions:
+  - "Reference years are on the same harmonised scale; their own uncertainty is ignored by z (show it separately)."
+audit: {verdict: "FIX", finding: "Three versions exist: code uses raw counts with the target year inside the baseline; Atlas uses ln(1+x); visual guide uses ln(rate), which is undefined when rate = 0 (RUN: math domain error). v2 uses the Anscombe-style log((F+0.5)/(E+1)), leave-target-out, \u22658 reference years."}
+worked_example: "Nov history 300, 280, 320, 310; target 410 \u2192 in-sample z 6.74 vs leave-out z 7.08 (RUN; teaching numbers)."
+pseudocode: |
+  ref = [y for yr,y in hist if yr != target]
+  if len(ref) < 8: return insufficient
+edge_cases:
+  - "MAD = 0 \u2192 floor; report 'floor used'."
+  - "Missing months excluded, not zero."
+tests:
+  - "z(rate=0) finite"
+  - "target not in its baseline"
+ui: "Calendar 'anomaly z' metric with sample-size badge."
+sources:
+  - "Visual guide CHANGED card; Book 3 \u00a73.3"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

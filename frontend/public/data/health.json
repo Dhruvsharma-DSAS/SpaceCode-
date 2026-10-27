@@ -1,0 +1,172 @@
+{
+ "data": {
+  "sources": [
+   {
+    "id": "firms_area_api",
+    "input": "x_fire_points",
+    "role": "primary (recent / small areas)",
+    "provider": "NASA FIRMS",
+    "endpoint": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/{MAP_KEY}/{SOURCE}/{W,S,E,N}/{DAY_RANGE}/{YYYY-MM-DD}",
+    "auth": "FIRMS_MAP_KEY",
+    "verified_on": "2026-10-27",
+    "status": "UNKNOWN"
+   },
+   {
+    "id": "firms_archive",
+    "input": "x_fire_points",
+    "role": "primary (history 2000->)",
+    "provider": "NASA FIRMS",
+    "endpoint": "https://firms.modaps.eosdis.nasa.gov/download/",
+    "auth": "Earthdata login or email code",
+    "verified_on": "2026-10-27",
+    "status": "UNKNOWN"
+   },
+   {
+    "id": "laads_earthaccess",
+    "input": "x_fire_points",
+    "role": "backup",
+    "provider": "NASA LAADS DAAC",
+    "endpoint": "https://ladsweb.modaps.eosdis.nasa.gov/",
+    "auth": "EARTHDATA_USERNAME/PASSWORD (~/.netrc)",
+    "verified_on": "",
+    "status": "UNKNOWN"
+   },
+   {
+    "id": "gee_mod14a1",
+    "input": "x_clear_days",
+    "role": "primary exposure",
+    "provider": "Google Earth Engine",
+    "endpoint": "ee.ImageCollection('MODIS/061/MOD14A1')",
+    "auth": "EE_PROJECT (+ earthengine authenticate)",
+    "verified_on": "2026-10-27",
+    "status": "UNKNOWN"
+   },
+   {
+    "id": "gee_vnp14a1",
+    "input": "x_clear_days",
+    "role": "primary exposure (VIIRS)",
+    "provider": "Google Earth Engine",
+    "endpoint": "ee.ImageCollection('NASA/VIIRS/002/VNP14A1')",
+    "auth": "EE_PROJECT",
+    "verified_on": "2026-10-27",
+    "status": "UNKNOWN"
+   },
+   {
+    "id": "planetary_computer_14a1",
+    "input": "x_clear_days",
+    "role": "backup",
+    "provider": "Microsoft Planetary Computer",
+    "endpoint": "https://planetarycomputer.microsoft.com/",
+    "auth": "none for STAC read",
+    "verified_on": "",
+    "status": "UNKNOWN"
+   },
+   {
+    "id": "gee_mcd64a1",
+    "input": "x_burned_area",
+    "role": "primary",
+    "provider": "Google Earth Engine",
+    "endpoint": "ee.ImageCollection('MODIS/061/MCD64A1')",
+    "auth": "EE_PROJECT",
+    "verified_on": "2026-10-27",
+    "status": "UNKNOWN"
+   },
+   {
+    "id": "esa_worldcover",
+    "input": "x_land_cover",
+    "role": "primary",
+    "provider": "ESA",
+    "endpoint": "ee.ImageCollection('ESA/WorldCover/v200')",
+    "auth": "EE_PROJECT",
+    "verified_on": "",
+    "status": "UNKNOWN"
+   },
+   {
+    "id": "osm_overpass",
+    "input": "x_industry",
+    "role": "primary",
+    "provider": "OpenStreetMap",
+    "endpoint": "https://overpass-api.de/api/interpreter",
+    "auth": "none",
+    "verified_on": "",
+    "status": "UNKNOWN"
+   },
+   {
+    "id": "open_meteo_archive",
+    "input": "x_weather",
+    "role": "context only",
+    "provider": "Open-Meteo",
+    "endpoint": "https://archive-api.open-meteo.com/v1/archive",
+    "auth": "none",
+    "verified_on": "",
+    "status": "UNKNOWN"
+   },
+   {
+    "id": "nasa_power",
+    "input": "x_weather",
+    "role": "backup",
+    "provider": "NASA LaRC",
+    "endpoint": "https://power.larc.nasa.gov/api/temporal/daily/point",
+    "auth": "none",
+    "verified_on": "",
+    "status": "UNKNOWN"
+   },
+   {
+    "id": "openaq_v3",
+    "input": "x_air_quality",
+    "role": "impact panel",
+    "provider": "OpenAQ",
+    "endpoint": "https://api.openaq.org/v3/",
+    "auth": "OPENAQ_API_KEY",
+    "verified_on": "",
+    "status": "UNKNOWN"
+   },
+   {
+    "id": "celestrak_gp",
+    "input": "x_orbits",
+    "role": "primary",
+    "provider": "CelesTrak",
+    "endpoint": "https://celestrak.org/NORAD/elements/gp.php?CATNR={id}&FORMAT=json",
+    "auth": "none",
+    "verified_on": "",
+    "status": "UNKNOWN"
+   },
+   {
+    "id": "natural_earth",
+    "input": "x_boundaries",
+    "role": "STATIC CSV (included)",
+    "provider": "Natural Earth",
+    "endpoint": "https://github.com/nvkelso/natural-earth-vector",
+    "auth": "none",
+    "verified_on": "2026-10-27",
+    "status": "UNKNOWN"
+   },
+   {
+    "id": "geoboundaries",
+    "input": "x_boundaries",
+    "role": "backup (districts)",
+    "provider": "geoBoundaries",
+    "endpoint": "https://www.geoboundaries.org/api/current/gbOpen/IND/ADM2/",
+    "auth": "none",
+    "verified_on": "",
+    "status": "UNKNOWN"
+   },
+   {
+    "id": "cmr_search",
+    "input": "x_granule_index",
+    "role": "health/archive",
+    "provider": "NASA CMR",
+    "endpoint": "https://cmr.earthdata.nasa.gov/search/",
+    "auth": "none",
+    "verified_on": "",
+    "status": "UNKNOWN"
+   }
+  ]
+ },
+ "meta": {
+  "data_source": "data_source.csv",
+  "provenance": "OFFICIAL_DOCUMENTED",
+  "demo": false,
+  "note": "status is filled by GET /api/health"
+ }
+}

@@ -1,0 +1,32 @@
+id: F02
+name: "Pixel growth with scan angle"
+family: "Time, space and counting"
+layer: "L1"
+status_v1: P
+status_v2: "REVISE"
+purpose: "Explains why one detection near the swath edge represents a much larger footprint than one at nadir, and gives the per-detection footprint area used for sensitivity checks (equal-effective-swath experiments)."
+equation_v1: "\\frac{s(\\theta)}{s_0} \\approx \\frac{1}{\\cos^2\\theta},\\qquad \\frac{t(\\theta)}{t_0} \\approx \\frac{1}{\\cos\\theta}"
+equation_v2: "A_{\\mathrm{pix}} = \\mathrm{scan}\\times\\mathrm{track}\\ \\ (\\text{use FIRMS columns, km}^2),\\qquad \\text{flat-Earth } 1/\\cos^2\\theta \\text{ is a teaching approximation only}"
+inputs:
+  - {symbol: "\u03b8", meaning: "view (scan) angle", unit: "rad"}
+  - {symbol: "s, t", meaning: "along-scan and along-track pixel size", unit: "km"}
+  - {symbol: "scan, track", meaning: "FIRMS columns giving actual pixel dimensions", unit: "km"}
+assumptions:
+  - "Earth curvature makes real edge growth larger than the flat formula (MODIS ~2\u00d74.8 km at 55\u00b0)."
+  - "VIIRS aggregation/bow-tie deletion keeps its growth much smaller than MODIS."
+audit: {verdict: "REVISE", finding: "The 1/cos\u00b2 law is a flat-Earth approximation and underestimates MODIS edge growth. FIRMS already supplies scan and track, so use them. A bigger pixel does not mean a bigger fire."}
+worked_example: "MODIS nadir 1.0\u00d71.0 km; FIRMS edge rows show scan\u22484.8, track\u22482.0 \u2192 footprint \u22489.6 km\u00b2. VIIRS 375 m edge \u22480.8\u00d70.8 km."
+pseudocode: |
+  df['pix_km2'] = df.scan * df.track
+  sensitivity = df[df.scan <= scan_max]
+edge_cases:
+  - "Do not filter scan \u2264 2 km for MODIS without testing: it removes most of the swath and changes revisit frequency."
+tests:
+  - "pix_km2 \u2265 nominal area"
+  - "Report % of detections removed by any scan filter."
+ui: "Sensor Lab: 'why the dots differ' panel; Learn lesson 2."
+sources:
+  - "Giglio et al. 2016 (MODIS C6)"
+  - "Schroeder et al. 2014 (VIIRS 375 m)"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

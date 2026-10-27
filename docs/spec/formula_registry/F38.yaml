@@ -1,0 +1,27 @@
+id: F38
+name: "Kalman fusion (local-level model)"
+family: "Fusion and AI"
+layer: "Experimental"
+status_v1: T
+status_v2: "FIX"
+purpose: "One smoothed activity series from several sensors, each weighted by its noise."
+equation_v1: "\\hat x = \\hat x^- + K(z - \\hat x^-),\\qquad K = \\frac{P^-}{P^- + R}"
+equation_v2: "x_t=x_{t-1}+w_t,\\ z_{s,t}=x_t+v_{s,t};\\ \\ P^-_t=P_{t-1}+Q\\Delta t,\\ K=\\frac{P^-}{P^-+R_s};\\ \\text{skip update when } z\\ \\text{missing; init on first valid } z"
+inputs:
+  - {symbol: "Q", meaning: "process noise", unit: "-"}
+  - {symbol: "R_s", meaning: "measurement noise per sensor", unit: "-"}
+assumptions:
+  - "Constant Q, R; Gaussian; one state."
+audit: {verdict: "FIX", finding: "v1 can start with level None when the first values are missing. RUN here with [None, None, 10, 12, None, 11] \u2192 [None, None, 10, 11.11, 11.11, 11.05]. Output is a model estimate, never 'observed'."}
+worked_example: "see audit run"
+pseudocode: |
+  if x is None: init on first valid z
+edge_cases:
+  - "Irregular time steps scale Q by \u0394t."
+tests:
+  - "no arithmetic on None"
+ui: "Sensor Lab experimental tab (PROPOSED)."
+sources:
+  - "Kalman 1960; Durbin & Koopman"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

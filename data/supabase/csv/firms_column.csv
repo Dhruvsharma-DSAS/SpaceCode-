@@ -1,0 +1,17 @@
+column,sensor,meaning,unit
+latitude,both,pixel centre latitude,deg
+longitude,both,pixel centre longitude,deg
+brightness,MODIS,channel 21/22 brightness temperature,K
+bright_t31,MODIS,channel 31 brightness temperature,K
+bright_ti4,VIIRS,I-4 brightness temperature,K
+bright_ti5,VIIRS,I-5 brightness temperature,K
+scan,both,along-scan pixel size,km
+track,both,along-track pixel size,km
+acq_date,both,acquisition date,UTC date
+acq_time,both,acquisition time HHMM,UTC
+satellite,both,Terra/Aqua or N/1/2 code,-
+confidence,both,MODIS 0-100; VIIRS l/n/h,-
+version,both,collection/processing version (NRT/SP),-
+frp,both,fire radiative power,MW
+daynight,both,D or N,-
+type,MODIS archive,"0 veg, 1 volcano, 2 static, 3 offshore",-

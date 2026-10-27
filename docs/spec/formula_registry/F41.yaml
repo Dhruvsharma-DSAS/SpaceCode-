@@ -1,0 +1,27 @@
+id: F41
+name: "DBSCAN fire clustering"
+family: "Fusion and AI"
+layer: "L2"
+status_v1: P
+status_v2: "REVISE"
+purpose: "Groups detections into events/sites; feeds persistence and night fraction per site."
+equation_v1: "\\mathrm{core}(p) \\iff |N_\\varepsilon(p)| \\ge \\mathrm{minPts},\\quad N_\\varepsilon(p) = \\{q : d(p,q)\\le\\varepsilon\\}"
+equation_v2: "\\text{ST-DBSCAN on (space, time) with } \\varepsilon_s,\\varepsilon_t \\text{ per sensor resolution; sites from multi-year persistent clusters}"
+inputs:
+  - {symbol: "\u03b5", meaning: "radius", unit: "km"}
+  - {symbol: "minPts", meaning: "min neighbours", unit: "-"}
+assumptions:
+  - "\u03b5 larger than geolocation error (MODIS ~1 km, VIIRS ~375 m)."
+audit: {verdict: "REVISE", finding: "Spatial-only clustering merges unrelated fires on different days; add time. Clusters are not fires 'counted'."}
+worked_example: "\u03b5=1.5 km, minPts=3 on a year of VIIRS \u2192 kiln sites."
+pseudocode: |
+  DBSCAN(eps=eps/R, metric='haversine')
+edge_cases:
+  - "Mixed sensors need sensor-specific \u03b5."
+tests:
+  - "synthetic sites recovered"
+ui: "Source map site outlines."
+sources:
+  - "Ester et al. 1996"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

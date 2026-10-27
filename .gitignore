@@ -1,0 +1,18 @@
+node_modules/
+dist/
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+
+# not part of the deliverable
+archive/
+design/prototype/
+design/screenshots/
+frontend/public/vid/tour.*
+frontend/public/img/aqua_hero.webp
+frontend/public/img/npp_hero2.webp
+frontend/public/logo_board.png
+*.log

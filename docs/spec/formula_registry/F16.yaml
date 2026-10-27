@@ -1,0 +1,26 @@
+id: F16
+name: "Delta-method interval for a ratio"
+family: "Calibration between sensors"
+layer: "L1"
+status_v1: P
+status_v2: "REVISE"
+purpose: "Quick interval for k; v2 shows that paired sensors are positively correlated, so the independent formula is not exact."
+equation_v1: "\\operatorname{Var}\\!\\left(\\log \\tfrac{V}{M}\\right) \\approx \\frac{1}{V} + \\frac{1}{M}"
+equation_v2: "\\operatorname{Var}(\\log\\hat k) \\approx \\frac{1}{V}+\\frac{1}{M}-\\frac{2\\operatorname{Cov}(V,M)}{VM};\\ \\ \\text{default: paired block bootstrap (F24)}"
+inputs:
+  - {symbol: "V, M", meaning: "totals", unit: "count"}
+assumptions:
+  - "Independent Poisson counts \u2014 false for the same fires seen by two sensors."
+audit: {verdict: "REVISE", finding: "RUN here: totals 247/95 \u2192 k 2.60, 95% [2.05, 3.29] under independence. Correlation narrows the true interval, overdispersion widens it; bootstrap over years captures both. Undefined for V or M = 0."}
+worked_example: "k = 2.60, se(log k) = \u221a(1/247 + 1/95) = 0.121 \u2192 [2.05, 3.29]."
+pseudocode: |
+  se = sqrt(1/V + 1/M) if V>0 and M>0 else None
+edge_cases:
+  - "Zero counts \u2192 no interval; use Garwood bounds (F26) on each count."
+tests:
+  - "CI contains k; returns None at zero"
+ui: "Sensor Lab k \u00b1 band (labelled 'approx.')."
+sources:
+  - "Delta method"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

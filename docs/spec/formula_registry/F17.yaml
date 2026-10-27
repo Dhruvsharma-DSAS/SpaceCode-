@@ -1,0 +1,26 @@
+id: F17
+name: "Shrink local factor toward global"
+family: "Calibration between sensors"
+layer: "L1"
+status_v1: E
+status_v2: "REVISE"
+purpose: "Stops a small region with two noisy months from getting an extreme k."
+equation_v1: "\\tilde k = \\frac{n\\,k_{\\mathrm{loc}} + n_0\\,k_{\\mathrm{glob}}}{n + n_0}"
+equation_v2: "\\text{kept only as a teaching / fallback rule; production uses F18 on }\\log k"
+inputs:
+  - {symbol: "n\u2080", meaning: "prior strength", unit: "years"}
+assumptions:
+  - "n\u2080 hand-picked (6 in docs, 4 in tests)."
+audit: {verdict: "REVISE", finding: "Arithmetic is right (3,4,2,4 \u2192 2.5, RUN). Shrinking on the ratio scale is not the same as partial pooling on log k (F18); do not present both as one method."}
+worked_example: "k_loc 3.0 (4 yrs), k_glob 2.0, n\u2080 4 \u2192 2.5."
+pseudocode: |
+  (n*k + n0*kg)/(n + n0)
+edge_cases:
+  - "k_loc None \u2192 k_glob"
+tests:
+  - "v1 tests pass"
+ui: "Sensor Lab 'small area' note."
+sources:
+  - "Book 3 \u00a72.5"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

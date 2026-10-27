@@ -1,0 +1,9 @@
+alias,context,formula_id,note
+F09 calibration,early chat walkthrough,F10,calibration ratio concepts now F10-F14
+F16 bootstrap,early chat walkthrough,F24,bootstrap is F24; F16 is the delta-method interval
+clear-sky normalisation,Book 5 accuracy upgrade,F09,renamed 'exposure rate'
+k_shrunk,Strategy doc,F17,teaching rule; production F18
+seam test,Strategy / Book 3,F35,plus F33/F34 placebo
+FIS = 0.45T+0.30I+0.15WCS+0.10C,SIH deck,REJECT,hand-weighted score not used; see IDEA-17
+L_context,CLAUDE.md,F43,sign: + = industry
+diurnal fraction,Blind Spot spec,F45,scenario only

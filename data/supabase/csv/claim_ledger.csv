@@ -1,0 +1,21 @@
+claim_id,claim,value,region,period,units,source_url,verified_on,status,test
+CL-01,FIRMS MODIS C6.1 archive start,2000-11-01,global,-,date,https://firms.modaps.eosdis.nasa.gov/download/,2026-10-27,OFFICIAL DOCUMENTED,-
+CL-02,FIRMS VIIRS S-NPP archive start,2012-01-20,global,-,date,https://firms.modaps.eosdis.nasa.gov/download/,2026-10-27,OFFICIAL DOCUMENTED,-
+CL-03,FIRMS VIIRS NOAA-20 archive start,2018-04-01,global,-,date,https://firms.modaps.eosdis.nasa.gov/download/,2026-10-27,OFFICIAL DOCUMENTED,-
+CL-04,FIRMS VIIRS NOAA-21 archive start,2023-03-01,global,-,date,https://firms.modaps.eosdis.nasa.gov/download/,2026-10-27,OFFICIAL DOCUMENTED,-
+CL-05,NRT replaced by standard data,~5 months lag,global,-,months,https://firms.modaps.eosdis.nasa.gov/download/,2026-10-27,OFFICIAL DOCUMENTED,-
+CL-06,S-NPP new data delivery ceases,2 Nov 2026 (future as of 27 Oct),global,-,date,https://www.earthdata.nasa.gov/data/alerts-outages/transition-from-modis-viirs,2026-10-27,OFFICIAL DOCUMENTED (plan),-
+CL-07,Terra end of science,Feb 2027 (NASA); data collection Jan 2027 (CAMS),global,-,date,https://science.nasa.gov/science-research/earth-science/terra-the-end-of-an-era/,2026-10-27,OFFICIAL DOCUMENTED (plan),-
+CL-08,Aqua end of science,Sep 2027,global,-,date,same,2026-10-27,OFFICIAL DOCUMENTED (plan),-
+CL-09,Terra equator crossing by fall 2022,~10:15,global,2022,LMST,same,2026-10-27,OFFICIAL DOCUMENTED,-
+CL-10,CAMS GFAS added VIIRS,4 Dec 2025,global,-,date,https://atmosphere.copernicus.eu/drifting-away-modis-cams-global-fire-assimilation-system,2026-10-27,OFFICIAL DOCUMENTED,-
+CL-11,"MOD14A1 FireMask 4 = cloud, 5 = non-fire land, 6 = unknown, 7-9 fire",classes,global,-,-,https://developers.google.com/earth-engine/datasets/catalog/MODIS_061_MOD14A1,2026-10-27,OFFICIAL DOCUMENTED,firemask_class.csv
+CL-12,VNP14A1 is 1 km daily (not 375 m),1000 m,global,-,m,https://developers.google.com/earth-engine/datasets/catalog/NASA_VIIRS_002_VNP14A1,2026-10-27,OFFICIAL DOCUMENTED,-
+CL-13,MCD64A1 uses 1 km MODIS active fire as input,yes,global,-,-,https://developers.google.com/earth-engine/datasets/catalog/MODIS_061_MCD64A1,2026-10-27,OFFICIAL DOCUMENTED,-
+CL-14,Punjab large farm fires after 3 pm,>90% in 2024-25 (3% in 2021),Punjab,2021-2025,%,iFOREST 2025 via Tribune (secondary),2026-10-15,SOURCE-DERIVED (secondary report),re-check primary report
+CL-15,Punjab burnt area,"~31,447 km2 (2022) -> ~20,000 km2 (2025)",Punjab,2022-2025,km2,iFOREST 2025 via Tribune (secondary),2026-10-15,SOURCE-DERIVED (secondary report),method Sentinel-2; not MCD64A1
+CL-16,Kiln Watch seam reduction 2.9%,self-reported,Bangladesh,-,%,github.com/Aalvee-Aarham/kiln-watch,2026-10-15,UNREVIEWED,-
+CL-17,FireCal LOYO 1.6-5%,self-reported,global,-,%,github.com/samuelakosaonyejekwe/firecal,2026-10-15,UNREVIEWED,-
+CL-18,Gridded area Punjab (Natural Earth),"50,444 km2",Punjab,-,km2,"computed, region.csv",2026-10-27,SOURCE-DERIVED,F04
+CL-19,VIIRS I4 saturates on ~8% of daytime fire pixels,~8%,global,-,%,Schroeder et al. 2014,2026-10-15,"OFFICIAL DOCUMENTED (paper, via project notes)",re-read paper
+CL-20,MODIS confidence field is experimental,-,global,-,-,https://firms2.modaps.eosdis.nasa.gov/alerts/notes.php,2026-10-27,OFFICIAL DOCUMENTED,-

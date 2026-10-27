@@ -1,0 +1,26 @@
+id: F13
+name: "Separate day and night factors"
+family: "Calibration between sensors"
+layer: "L1"
+status_v1: P
+status_v2: "REVISE"
+purpose: "Day and night detection behaviour differs; mixing them hides shifts in night burning."
+equation_v1: "\\hat k_{\\mathrm{day}} = \\operatorname{median}\\frac{V^D_m}{M^D_m},\\qquad \\hat k_{\\mathrm{night}} = \\operatorname{median}\\frac{V^N_m}{M^N_m}"
+equation_v2: "\\hat k_{\\delta} \\text{ per stratum } \\delta\\in\\{D,N\\}\\ \\text{using matched overpass windows (actual acq_time, not fixed 10:30/13:30)}"
+inputs:
+  - {symbol: "\u03b4", meaning: "day or night", unit: "-"}
+assumptions:
+  - "Aqua and S-NPP afternoon passes are close in time; Terra's drift (10:30 \u2192 ~10:15 by 2022) changes what 'morning' means."
+audit: {verdict: "REVISE", finding: "Use observed acquisition times per year; generic Terra 10:30 / Aqua 13:30 is wrong for late years (NASA: Terra crossing ~10:15 by fall 2022)."}
+worked_example: "k_day 2.1, k_night 4.0 (teaching example, SIMULATED)."
+pseudocode: |
+  for dn in ['D','N']: k[dn] = fit(pairs[pairs.dn == dn])
+edge_cases:
+  - "Night strata are sparse; pool with EB (F18)."
+tests:
+  - "night k not computed \u2192 '\u2014 needs archive run'"
+ui: "Sensor Lab day/night switch."
+sources:
+  - "NASA Terra end-of-era article (Dec 2025)"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

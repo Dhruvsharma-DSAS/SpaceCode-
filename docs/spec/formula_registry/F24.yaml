@@ -1,0 +1,27 @@
+id: F24
+name: "Block bootstrap over years"
+family: "Uncertainty"
+layer: "L1 / L4"
+status_v1: T
+status_v2: "FIX"
+purpose: "Interval for k and for any summary, respecting that months inside a year are correlated."
+equation_v1: "\\hat\\theta^{*(b)} = T(\\text{years resampled}),\\ \\ \\mathrm{CI} = [q_{2.5}, q_{97.5}]\\ \\ (\\text{code: } q_5,q_{95})"
+equation_v2: "\\mathrm{CI}_{1-\\alpha} = \\left[q_{\\alpha/2}(\\hat\\theta^{*}),\\ q_{1-\\alpha/2}(\\hat\\theta^{*})\\right],\\ \\alpha\\ \\text{explicit},\\ \\text{resample whole years (or seasons)}"
+inputs:
+  - {symbol: "\u03b1", meaning: "1 \u2212 coverage", unit: "-"}
+  - {symbol: "B", meaning: "bootstrap draws (\u22652000)", unit: "-"}
+assumptions:
+  - "Years are exchangeable blocks; \u22658 blocks for a usable interval."
+audit: {verdict: "FIX", finding: "Docs say 95% (2.5\u201397.5) but Book 3 and the code use 5\u201395 = 90%. RUN here with {2.45, 2.5, 2.5, 2.6}: 90% [2.450, 2.550] vs 95% [2.450, 2.600]. With 4 years the bootstrap distribution has only a handful of values: report 'too few years'."}
+worked_example: "ratios {2.45,2.5,2.5,2.6}, B=2000, seed 42 \u2192 95% [2.45, 2.60]."
+pseudocode: |
+  def boot(v, m, alpha=0.05): ... quantile(alpha/2), quantile(1-alpha/2)
+edge_cases:
+  - "Resample totals, not ratios, to avoid zero-denominator draws."
+tests:
+  - "coverage test on simulated data \u2248 nominal (see Ch. 14)"
+ui: "Every band shows its level (90% or 95%) in the legend."
+sources:
+  - "Efron & Tibshirani; K\u00fcnsch 1989"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

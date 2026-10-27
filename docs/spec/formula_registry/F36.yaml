@@ -1,0 +1,26 @@
+id: F36
+name: "Held-out error (LOYO and blocked CV)"
+family: "Trends and seam tests"
+layer: "Validation"
+status_v1: P
+status_v2: "FIX"
+purpose: "Honest out-of-sample error: hide a year (or region), fit on the rest, predict the hidden one."
+equation_v1: "\\mathrm{MAPE}_{\\mathrm{LOYO}} = \\frac{1}{Y}\\sum_{y}\\frac{|\\hat k_{-y}M_y - V_y|}{V_y}"
+equation_v2: "\\mathrm{MAE}_y=|\\hat k_{-y}M_y-V_y|,\\ \\ D_y=2\\!\\left[V_y\\ln\\frac{V_y}{\\hat\\mu_y}-(V_y-\\hat\\mu_y)\\right],\\ \\ \\mathrm{sMAPE}\\ \\text{with } V_y+\\hat\\mu_y>0"
+inputs:
+  - {symbol: "D", meaning: "Poisson deviance", unit: "-"}
+assumptions:
+  - "Hidden years independent of training years (block by season)."
+audit: {verdict: "FIX", finding: "MAPE is infinite when V = 0 and favours under-prediction. Use MAE + Poisson deviance + guarded sMAPE; also hold out regions."}
+worked_example: "Book 3 LOYO: hidden errors 0, 0, 3.85, 2.04% \u2192 median 1.0% (teaching)."
+pseudocode: |
+  for y in years: k = fit(exclude y); score(y)
+edge_cases:
+  - "Thresholds must be declared before running."
+tests:
+  - "no division by zero"
+ui: "Validation LOYO chart."
+sources:
+  - "FireCal README (self-reported 1.6\u20135%)"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

@@ -1,0 +1,126 @@
+{
+ "data": [
+  {
+   "id": "world",
+   "name": "Whole Earth",
+   "country": null,
+   "role": "default_global",
+   "bbox": [
+    -180,
+    -90,
+    180,
+    90
+   ],
+   "area_km2": 510072000
+  },
+  {
+   "id": "california",
+   "name": "California",
+   "country": "United States of America",
+   "role": "global_test",
+   "bbox": [
+    -124.4092,
+    32.5317,
+    -114.1191,
+    41.9995
+   ],
+   "area_km2": 409602.6
+  },
+  {
+   "id": "mato_grosso",
+   "name": "Mato Grosso",
+   "country": "Brazil",
+   "role": "global_test",
+   "bbox": [
+    -61.6113,
+    -18.0316,
+    -50.2357,
+    -7.3391
+   ],
+   "area_km2": 906655.5
+  },
+  {
+   "id": "punjab",
+   "name": "Punjab",
+   "country": "India",
+   "role": "flagship",
+   "bbox": [
+    73.8423,
+    29.5598,
+    76.9104,
+    32.5167
+   ],
+   "area_km2": 50444.3
+  },
+  {
+   "id": "new_south_wales",
+   "name": "New South Wales",
+   "country": "Australia",
+   "role": "global_test",
+   "bbox": [
+    141.0001,
+    -37.5103,
+    153.6306,
+    -28.1493
+   ],
+   "area_km2": 802466.5
+  },
+  {
+   "id": "delhi",
+   "name": "Delhi",
+   "country": "India",
+   "role": "air_quality_context",
+   "bbox": [
+    76.8337,
+    28.4326,
+    77.3375,
+    28.8821
+   ],
+   "area_km2": 1480.9
+  },
+  {
+   "id": "chandigarh",
+   "name": "Chandigarh",
+   "country": "India",
+   "role": "flagship",
+   "bbox": [
+    76.6937,
+    30.6723,
+    76.8273,
+    30.799
+   ],
+   "area_km2": 120.1
+  },
+  {
+   "id": "haryana",
+   "name": "Haryana",
+   "country": "India",
+   "role": "flagship",
+   "bbox": [
+    74.4594,
+    27.6704,
+    77.588,
+    30.9343
+   ],
+   "area_km2": 43996.8
+  },
+  {
+   "id": "punjab_haryana",
+   "name": "Punjab + Haryana + Chandigarh (flagship)",
+   "country": "India",
+   "role": "flagship",
+   "bbox": [
+    73.8423,
+    27.6704,
+    77.588,
+    32.5167
+   ],
+   "area_km2": 94561.2
+  }
+ ],
+ "meta": {
+  "data_source": "Natural Earth 10m admin-1, gridded at 0.1 deg",
+  "provenance": "SOURCE_DERIVED",
+  "demo": false
+ }
+}

@@ -1,0 +1,26 @@
+id: F44
+name: "Night fraction"
+family: "Source attribution and blind spot"
+layer: "L2"
+status_v1: P
+status_v2: "REVISE"
+purpose: "Industrial sources burn at night; crop fires mostly in the afternoon."
+equation_v1: "\\nu_g = \\frac{N^{\\mathrm{night}}_g}{N^{\\mathrm{day}}_g + N^{\\mathrm{night}}_g}"
+equation_v2: "\\nu_g=\\frac{N^{N}_g/E^{N}_g}{N^{D}_g/E^{D}_g+N^{N}_g/E^{N}_g}\\ \\ (\\text{exposure-adjusted; night passes are fewer for MODIS})"
+inputs:
+  - {symbol: "E^D, E^N", meaning: "day and night opportunities", unit: "-"}
+assumptions:
+  - "Night detection sensitivity differs (cooler background, different thresholds)."
+audit: {verdict: "REVISE", finding: "Raw share is biased by unequal day/night opportunities. Threshold 20% is a hypothesis."}
+worked_example: "Kiln 0.45, paddy 0.05 (teaching)."
+pseudocode: |
+  exposure-adjusted share
+edge_cases:
+  - "Few detections (<10) \u2192 NULL."
+tests:
+  - "equal rates \u2192 0.5"
+ui: "Source evidence 'night share'."
+sources:
+  - "Visual guide CUT-OFF card"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

@@ -1,0 +1,26 @@
+id: F26
+name: "Exact Poisson interval (Garwood)"
+family: "Uncertainty"
+layer: "L1"
+status_v1: P
+status_v2: "RUN / TESTED LOCALLY"
+purpose: "Correct interval for tiny counts (0\u201310) where normal approximations fail."
+equation_v1: "\\left[\\tfrac12\\chi^2_{2n,\\,\\alpha/2},\\ \\tfrac12\\chi^2_{2(n+1),\\,1-\\alpha/2}\\right]"
+equation_v2: "\\left[\\tfrac12\\chi^2_{2n,\\,\\alpha/2},\\ \\tfrac12\\chi^2_{2(n+1),\\,1-\\alpha/2}\\right],\\ \\ \\text{lower}=0\\ \\text{when } n=0"
+inputs:
+  - {symbol: "n", meaning: "observed count", unit: "-"}
+assumptions:
+  - "Count is Poisson (no overdispersion)."
+audit: {verdict: "OK", finding: "RUN here: n=3 \u2192 [0.62, 8.77] (doc 0.6\u20138.8). Add n=0 rule."}
+worked_example: "n=0 \u2192 [0, 3.69]; n=3 \u2192 [0.62, 8.77]."
+pseudocode: |
+  lo = chi2.ppf(a/2, 2n)/2 if n>0 else 0; hi = chi2.ppf(1-a/2, 2n+2)/2
+edge_cases:
+  - "Conservative (coverage \u2265 nominal)."
+tests:
+  - "garwood(3) == (0.619, 8.767)"
+ui: "Explorer inspector for small cells."
+sources:
+  - "Garwood 1936"
+changelog:
+  - '2026-10-27 V2 audit: OK'

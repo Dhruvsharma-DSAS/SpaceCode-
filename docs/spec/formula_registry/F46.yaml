@@ -1,0 +1,28 @@
+id: F46
+name: "Burned-area to detection ratio B"
+family: "Source attribution and blind spot"
+layer: "L3"
+status_v1: P
+status_v2: "FIX"
+purpose: "Warning flag: burn scars stay high while detections fall \u2192 detections may be missing burning."
+equation_v1: "B_{g,y} = \\frac{\\mathrm{BA}_{g,y}/C_{g,y}}{\\operatorname{median}_{y'<2021}\\left(\\mathrm{BA}_{g,y'}/C_{g,y'}\\right)}"
+equation_v2: "B_{r,y}=\\frac{\\mathrm{BA}_{r,y}/C_{r,y}}{\\operatorname{med}_{y'\\in\\mathcal{R}}(\\mathrm{BA}_{r,y'}/C_{r,y'})},\\ \\ |\\mathcal{R}|\\ge3;\\ \\ \\text{PENDING if BA lagged; NULL if } C=0"
+inputs:
+  - {symbol: "BA", meaning: "MCD64A1 burned area", unit: "km\u00b2"}
+  - {symbol: "C", meaning: "detected cell-days", unit: "count"}
+assumptions:
+  - "MCD64A1 itself uses MODIS active fire \u2192 not independent."
+  - "BA omission of small agricultural burns."
+audit: {verdict: "FIX", finding: "B is a disagreement flag, never a multiplier ('real burning is 2.4\u00d7 the dots' is unsupported). Guard zeros, lag (PENDING) and reference-year choice."}
+worked_example: "Reference median 1.2 km\u00b2/cell-day; 2024: 2.9 \u2192 B = 2.4 \u2192 'check' flag (teaching)."
+pseudocode: |
+  chronos_core.blindspot_ratio
+edge_cases:
+  - "Sentinel-2 based BA (iFOREST) differs in method; compare trends only."
+tests:
+  - "C=0 \u2192 unavailable; BA None \u2192 pending"
+ui: "Blind Spot B timeline; Brief flag."
+sources:
+  - "GEE MCD64A1 catalogue (inputs include active fire)"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

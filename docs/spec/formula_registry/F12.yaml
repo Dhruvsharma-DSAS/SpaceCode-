@@ -1,0 +1,27 @@
+id: F12
+name: "Harmonised MODIS value"
+family: "Calibration between sensors"
+layer: "L1"
+status_v1: E
+status_v2: "REVISE"
+purpose: "Expresses MODIS-era months in VIIRS-equivalent cell-days so the 25-year calendar uses one ruler."
+equation_v1: "H_{g,m} = \\hat k \\cdot M_{g,m}\\quad \\text{for } m < 2012"
+equation_v2: "\\hat V^{\\mathrm{eq}}_{r,\\sigma,t} = \\hat k_{r,\\sigma}\\, M_{r,\\sigma,t}\\ \\ \\text{(estimate, with interval)};\\ \\ t\\ge 2012:\\ V_{r,t}\\ \\text{observed}"
+inputs:
+  - {symbol: "V^eq", meaning: "VIIRS-equivalent cell-days (estimate)", unit: "cell-days"}
+assumptions:
+  - "k learned in overlap applies before 2012 (stationarity) \u2014 the biggest assumption in the project."
+  - "Terra morning passes have no VIIRS analogue; Terra-era scaling is an extrapolation."
+audit: {verdict: "REVISE", finding: "Fine as arithmetic. Visual guide example '200 \u2192 521 with k=2.6' should be 520. Label output as an estimate with an interval and the k version used."}
+worked_example: "Nov 2005 MODIS 200 cell-days \u00d7 k 2.6 = 520 VIIRS-eq cell-days (interval from F24/F25)."
+pseudocode: |
+  H = k * M ; H_lo, H_hi from propagated interval
+edge_cases:
+  - "Never multiply NULL by k; NULL stays NULL."
+tests:
+  - "harmonise_modis(100, 2.5) == 250"
+ui: "Calendar harmonised mode."
+sources:
+  - "Book 3 \u00a72.6"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

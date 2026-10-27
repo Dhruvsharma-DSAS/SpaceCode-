@@ -1,0 +1,26 @@
+id: F30
+name: "Mann\u2013Kendall trend test"
+family: "Trends and seam tests"
+layer: "L4"
+status_v1: T
+status_v2: "FIX"
+purpose: "Is the seasonal total rising or falling across years, without assuming a straight line or normal errors?"
+equation_v1: "S = \\sum_{i<j} \\operatorname{sgn}(x_j - x_i),\\quad \\operatorname{Var}(S)=\\frac{n(n-1)(2n+5)}{18}"
+equation_v2: "\\operatorname{Var}(S)=\\frac{n(n-1)(2n+5)-\\sum_{p} t_p(t_p-1)(2t_p+5)}{18}\\ \\ (\\text{tie groups } t_p)"
+inputs:
+  - {symbol: "t_p", meaning: "size of each tie group", unit: "-"}
+assumptions:
+  - "Independent years (see F31)."
+audit: {verdict: "FIX", finding: "RUN here: tie correction missing in v1. Series [5,3,6,2,5,4,5,3]: v1 var 65.33 vs corrected 60.67 (pymannkendall agrees, p = 0.700). Counts often tie (zeros), so this matters."}
+worked_example: "Book 3 series (b) 9 years: S = \u221216, Z = \u22121.56, p = 0.12 \u2192 not significant (RUN, matches)."
+pseudocode: |
+  var = (n(n-1)(2n+5) - sum(t(t-1)(2t+5)))/18
+edge_cases:
+  - "n < 8: report 'too short'."
+tests:
+  - "matches pymannkendall.original_test"
+ui: "Calendar trend line with p and effect size."
+sources:
+  - "Kendall 1975"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

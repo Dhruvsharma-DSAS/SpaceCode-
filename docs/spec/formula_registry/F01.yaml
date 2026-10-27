@@ -1,0 +1,33 @@
+id: F01
+name: "Local solar time of an overpass"
+family: "Time, space and counting"
+layer: "L1 / L3"
+status_v1: E
+status_v2: "RUN / TESTED LOCALLY"
+purpose: "Converts the FIRMS UTC acquisition time into the Sun's time at the pixel, so that overpass times, day/night strata and burning-hour comparisons are expressed on one clock everywhere on Earth."
+equation_v1: "t_{\\mathrm{LST}} = t_{\\mathrm{UTC}} + \\frac{\\lambda}{15^{\\circ}\\,\\mathrm{h}^{-1}}"
+equation_v2: "t_{\\mathrm{LMST}} = \\left(t_{\\mathrm{UTC}} + \\frac{\\lambda}{15}\\right) \\bmod 24,\\qquad t_{\\mathrm{LAST}} = t_{\\mathrm{LMST}} + \\frac{E(d)}{60}"
+inputs:
+  - {symbol: "t_UTC", meaning: "acquisition time from acq_time (HHMM)", unit: "hours"}
+  - {symbol: "\u03bb", meaning: "pixel longitude, east positive", unit: "degrees"}
+  - {symbol: "E(d)", meaning: "equation of time for day-of-year d", unit: "minutes, about \u221214 to +16"}
+assumptions:
+  - "Local mean solar time is enough for binning; apparent solar time differs by up to ~16 min."
+  - "acq_time is the granule/scan time, not the moment the fire started."
+audit: {verdict: "OK + EXTEND", finding: "Equation correct. Added modulo-24 and the equation-of-time note. Local solar time is not IST: Ludhiana (75.85\u00b0E) solar noon is ~12:06 LMST while IST is fixed to 82.5\u00b0E."}
+worked_example: "08:06 UTC at 75.85\u00b0E \u2192 8.10 + 75.85/15 = 8.10 + 5.057 = 13.157 h = 13:09 LMST (run here: 13:09)."
+pseudocode: |
+  def lmst(utc_h, lon):
+      return (utc_h + lon / 15.0) % 24.0
+edge_cases:
+  - "Longitude \u2212180/180 must give the same answer."
+  - "Times near midnight wrap to the previous/next local day: assign the local date, not the UTC date, when binning by local day."
+tests:
+  - "lmst(8.1, 75.85) == 13.157 \u00b1 0.001"
+  - "lmst(23, 30) == 1.0 (wrap)"
+ui: "Explorer overpass card, Blind Spot clock, Sensor Lab day/night split."
+sources:
+  - "FIRMS attribute table (acq_time UTC)"
+  - "NOAA solar calculator (equation of time)"
+changelog:
+  - '2026-10-27 V2 audit: OK + EXTEND'

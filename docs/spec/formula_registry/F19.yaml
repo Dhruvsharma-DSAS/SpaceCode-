@@ -1,0 +1,26 @@
+id: F19
+name: "Power law vs ratio (model choice)"
+family: "Calibration between sensors"
+layer: "L1"
+status_v1: T
+status_v2: "FIX"
+purpose: "Tests whether the relation is proportional or curved (e.g. MODIS saturating in big fire months)."
+equation_v1: "V = aM^{b}\\ \\text{vs}\\ V = kM,\\qquad \\mathrm{AIC} = n\\ln\\frac{\\mathrm{RSS}}{n} + 2p"
+equation_v2: "\\text{compare } \\log\\mu = \\log E + \\beta_0 + b\\log(M+0.5)\\ \\text{vs}\\ b=1\\ \\text{by held-out Poisson/NB deviance (blocked CV by year)}"
+inputs:
+  - {symbol: "b", meaning: "elasticity", unit: "-"}
+assumptions:
+  - "Same likelihood family for both models."
+audit: {verdict: "FIX", finding: "log(M) is \u2212\u221e at zero months; Gaussian RSS on logs is not the count likelihood; in-sample AIC is not predictive accuracy."}
+worked_example: "If held-out deviance improves < 2%, keep the simpler ratio."
+pseudocode: |
+  for fold in year_blocks: fit both; score deviance on fold
+edge_cases:
+  - "Small n: prefer simpler model."
+tests:
+  - "no log(0) in any fit"
+ui: "Sensor Lab 'model shape' chip."
+sources:
+  - "Burnham & Anderson"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

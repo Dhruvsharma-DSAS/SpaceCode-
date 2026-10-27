@@ -1,0 +1,100 @@
+{
+ "data": [
+  {
+   "id": "terra",
+   "name": "Terra",
+   "instrument": "MODIS",
+   "norad_id": 25994,
+   "launch": "1999-12-18",
+   "firms_start": "2000-11-01",
+   "crossing": "~10:30 descending (drifted earlier; ~10:15 by fall 2022)",
+   "end_plan": "Feb 2027 end of science (NASA, 29 Dec 2025); Jan 2027 end of data collection (CAMS, 25 Feb 2026)",
+   "source_urls": "https://science.nasa.gov/science-research/earth-science/terra-the-end-of-an-era/ ; https://atmosphere.copernicus.eu/drifting-away-modis-cams-global-fire-assimilation-system",
+   "illustrative_orbit": {
+    "inclination_deg": 98.2,
+    "period_min": 98.9,
+    "altitude_km": 705,
+    "node": "descending",
+    "equator_lmst_h": 10.25
+   }
+  },
+  {
+   "id": "aqua",
+   "name": "Aqua",
+   "instrument": "MODIS",
+   "norad_id": 27424,
+   "launch": "2002-05-04",
+   "firms_start": "2002-07-04",
+   "crossing": "~13:30 ascending (drifting)",
+   "end_plan": "Sep 2027 end of science (NASA); ~Sep 2027 (CAMS)",
+   "source_urls": "https://science.nasa.gov/science-research/earth-science/terra-the-end-of-an-era/",
+   "illustrative_orbit": {
+    "inclination_deg": 98.2,
+    "period_min": 98.8,
+    "altitude_km": 705,
+    "node": "ascending",
+    "equator_lmst_h": 13.6
+   }
+  },
+  {
+   "id": "snpp",
+   "name": "Suomi NPP",
+   "instrument": "VIIRS",
+   "norad_id": 37849,
+   "launch": "2011-10-28",
+   "firms_start": "2012-01-20",
+   "crossing": "~13:30 ascending",
+   "end_plan": "Delivery of new data ceases 2 Nov 2026 (NASA Earthdata) - future event as of 27 Oct 2026",
+   "source_urls": "https://www.earthdata.nasa.gov/data/alerts-outages/transition-from-modis-viirs ; https://firms.modaps.eosdis.nasa.gov/download/",
+   "illustrative_orbit": {
+    "inclination_deg": 98.7,
+    "period_min": 101.4,
+    "altitude_km": 824,
+    "node": "ascending",
+    "equator_lmst_h": 13.4
+   }
+  },
+  {
+   "id": "noaa20",
+   "name": "NOAA-20 (JPSS-1)",
+   "instrument": "VIIRS",
+   "norad_id": 43013,
+   "launch": "2017-11-18",
+   "firms_start": "2018-04-01",
+   "crossing": "~13:30 ascending (about half an orbit from S-NPP)",
+   "end_plan": "operational",
+   "source_urls": "https://firms.modaps.eosdis.nasa.gov/download/",
+   "illustrative_orbit": {
+    "inclination_deg": 98.7,
+    "period_min": 101.4,
+    "altitude_km": 824,
+    "node": "ascending",
+    "equator_lmst_h": 13.5
+   }
+  },
+  {
+   "id": "noaa21",
+   "name": "NOAA-21 (JPSS-2)",
+   "instrument": "VIIRS",
+   "norad_id": 54234,
+   "launch": "2022-11-10",
+   "firms_start": "2023-03-01",
+   "crossing": "~13:30 ascending",
+   "end_plan": "operational",
+   "source_urls": "https://firms.modaps.eosdis.nasa.gov/download/ ; https://firms.modaps.eosdis.nasa.gov/api/area/csv",
+   "illustrative_orbit": {
+    "inclination_deg": 98.7,
+    "period_min": 101.4,
+    "altitude_km": 824,
+    "node": "ascending",
+    "equator_lmst_h": 13.45
+   }
+  }
+ ],
+ "meta": {
+  "data_source": "satellite.csv (official facts) + illustrative circular orbits",
+  "provenance": "OFFICIAL_DOCUMENTED",
+  "demo": false,
+  "note": "Orbit drawing is illustrative (circular sun-synchronous). Use /api/satellites/tle (CelesTrak) + satellite.js for real positions."
+ }
+}

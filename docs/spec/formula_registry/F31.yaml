@@ -1,0 +1,26 @@
+id: F31
+name: "Hamed\u2013Rao autocorrelation correction"
+family: "Trends and seam tests"
+layer: "L4"
+status_v1: T
+status_v2: "RUN / TESTED LOCALLY"
+purpose: "Neighbouring years are similar, so the effective sample is smaller; this widens the test."
+equation_v1: "\\operatorname{Var}^*(S) = \\operatorname{Var}(S)\\cdot\\frac{n}{n^*_s},\\quad \\frac{n}{n^*_s} = 1 + \\frac{2}{n(n-1)(n-2)}\\sum_{k}(n-k)(n-k-1)(n-k-2)\\rho_k"
+equation_v2: "\\text{same, with }\\rho_k\\text{ of detrended ranks, only significant lags; seasonal Kendall for monthly series}"
+inputs:
+  - {symbol: "\u03c1_k", meaning: "rank autocorrelation at lag k", unit: "-"}
+assumptions:
+  - "Enough years to estimate \u03c1_k (\u226515)."
+audit: {verdict: "OK + LIMIT", finding: "RUN here on 9 years: z = \u22121.56, p = 0.118 (no correction applied \u2014 lags not significant). With 25 years \u03c1_k is noisy; report both raw and corrected p."}
+worked_example: "Book 3 series (b): unchanged p = 0.118."
+pseudocode: |
+  pymannkendall.hamed_rao_modification_test(x)
+edge_cases:
+  - "Do not mix with BH across cells without stating it."
+tests:
+  - "equals pymannkendall"
+ui: "Trend tooltip 'autocorrelation-adjusted'."
+sources:
+  - "Hamed & Rao 1998"
+changelog:
+  - '2026-10-27 V2 audit: OK + LIMIT'

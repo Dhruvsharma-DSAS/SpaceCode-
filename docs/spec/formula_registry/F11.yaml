@@ -1,0 +1,26 @@
+id: F11
+name: "Median of ratios"
+family: "Calibration between sensors"
+layer: "L1"
+status_v1: ET
+status_v2: "REVISE"
+purpose: "Robust exchange rate between sensors that resists one strange month."
+equation_v1: "\\hat k = \\operatorname{median}\\{k_m\\}\\quad(\\text{v1.1: only } M_m \\ge 5)"
+equation_v2: "\\hat k_{\\mathrm{robust}} = \\operatorname{median}\\{k_m : M_m \\ge 5\\}\\ \\text{ kept as baseline B3a; primary estimator is ratio of totals / GLM (F14)}"
+inputs:
+  - {symbol: "k_m", meaning: "monthly ratios", unit: "-"}
+assumptions:
+  - "Ratios exchangeable across years; no drift."
+audit: {verdict: "REVISE", finding: "RUN here (simulated, true k=2.6, MODIS 0\u20133 per month): median of monthly ratios averaged 2.22 (biased); ratio of totals 2.72. Median is a useful robustness check, not the default estimator for sparse counts. The \u22655 rule from the visual guide helps but discards data."}
+worked_example: "Ratios {2.45, 2.5, 2.5, 2.6} \u2192 median 2.5."
+pseudocode: |
+  k_med = median([v/m for v,m in pairs if m >= 5])
+edge_cases:
+  - "Fewer than 3 months \u2192 return status 'insufficient', fall back to pooled k."
+tests:
+  - "median vs totals compared in the baseline ladder"
+ui: "Sensor Lab model panel row 'median'."
+sources:
+  - "46-formula visual guide (CHANGED card)"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

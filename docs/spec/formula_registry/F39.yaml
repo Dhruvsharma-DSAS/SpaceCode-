@@ -1,0 +1,26 @@
+id: F39
+name: "Split conformal prediction sets"
+family: "Fusion and AI"
+layer: "L2"
+status_v1: T
+status_v2: "REVISE"
+purpose: "Source class sets with a marginal coverage guarantee: {crop} or {crop, kiln}."
+equation_v1: "\\hat q = \\mathrm{Quantile}_{\\lceil (n+1)(1-\\alpha)\\rceil/n}\\{1 - \\hat p_{y_i}(x_i)\\},\\quad C(x) = \\{y : 1-\\hat p_y(x) \\le \\hat q\\}"
+equation_v2: "\\text{same; calibration set = held-out sites (GroupKFold by site/region); report coverage by region; abstain if } |C(x)|>1"
+inputs:
+  - {symbol: "\u03b1", meaning: "miscoverage", unit: "-"}
+assumptions:
+  - "Exchangeability between calibration and new sites."
+audit: {verdict: "REVISE", finding: "Guarantee is marginal, not per district. Needs real labelled sites; none exist yet \u2192 feature remains PROPOSED."}
+worked_example: "n=100 calibration, \u03b1=0.1 \u2192 q\u0302 is the 91st smallest score."
+pseudocode: |
+  q = quantile(scores, ceil((n+1)(1-a))/n, 'higher')
+edge_cases:
+  - "Shift in region \u2192 coverage breaks; monitor."
+tests:
+  - "simulated coverage \u2248 0.9"
+ui: "Source page set chips."
+sources:
+  - "Vovk et al.; Angelopoulos & Bates 2021"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

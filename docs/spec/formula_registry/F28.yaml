@@ -1,0 +1,26 @@
+id: F28
+name: "Month baseline and spread"
+family: "Anomalies and seasons"
+layer: "L4"
+status_v1: E
+status_v2: "FIX"
+purpose: "The 'normal' November to compare against."
+equation_v1: "\\mathrm{base}_m = \\operatorname{median}_y H_{y,m},\\quad \\mathrm{spread}_m = 1.4826\\,\\mathrm{MAD}_y H_{y,m}"
+equation_v2: "\\mathrm{base}_{m,-t}=\\operatorname{med}_{y\\in\\mathcal{B}\\setminus t}\\,y_{y,m},\\ \\ \\mathrm{spread}_{m,-t}=\\max(1.4826\\,\\mathrm{MAD},0.15)\\ \\text{on the F27 scale}"
+inputs:
+  - {symbol: "y", meaning: "log exposure rate (F27)", unit: "-"}
+assumptions:
+  - "Same scale as F27."
+audit: {verdict: "FIX", finding: "calendar_build.month_baseline uses raw counts with floor 1.0 and includes the target year. Must use the same scale, floor and leave-out rule as F27."}
+worked_example: "Nov normal 480 \u00b1 90 (teaching)."
+pseudocode: |
+  see F27
+edge_cases:
+  - "Small history (<8) \u2192 'indicative'."
+tests:
+  - "same function used for API and calendar"
+ui: "Calendar inspector 'normal for November'."
+sources:
+  - "calendar_build.py"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

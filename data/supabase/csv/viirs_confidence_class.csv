@@ -1,0 +1,4 @@
+code,meaning,use_v2
+l,low,sensitivity runs only
+n,nominal,default keep
+h,high,default keep

@@ -1,0 +1,26 @@
+id: F25
+name: "Monte Carlo error propagation"
+family: "Uncertainty"
+layer: "L1"
+status_v1: T
+status_v2: "FIX"
+purpose: "Band on each calendar cell combining calibration uncertainty and count noise."
+equation_v1: "H^{(s)} = k^{(s)} M^{(s)},\\quad k^{(s)}\\sim \\mathcal{N}(\\hat k,\\sigma_k^2),\\ M^{(s)}\\sim\\mathrm{Poisson}(M)"
+equation_v2: "\\log k^{(s)}\\sim\\mathcal{N}(\\log\\hat k,\\ \\mathrm{se}^2_{\\log k}),\\ \\ H^{(s)}=k^{(s)}\\,M^{(s)},\\ \\ M^{(s)}\\sim\\mathrm{NB}(M,\\hat\\theta)\\ \\text{(predictive)}"
+inputs:
+  - {symbol: "se", meaning: "standard error of log k", unit: "-"}
+assumptions:
+  - "Calibration and count noise independent; do not add the same noise twice (k's bootstrap already contains count noise in overlap years)."
+audit: {verdict: "FIX", finding: "RUN here: with k=2.6, \u03c3=1.5 the normal draws are negative 4.2% of the time. Use log scale. Say whether the band is a confidence interval (for the expected value) or a predictive interval (for a new count)."}
+worked_example: "M=200, k=2.6 (se log 0.08) \u2192 95% \u2248 [430, 620] predictive."
+pseudocode: |
+  k_s = exp(normal(log k, se, S)); M_s = poisson(M, S); H_s = k_s*M_s
+edge_cases:
+  - "M = 0 still has uncertainty: Garwood upper bound."
+tests:
+  - "all draws positive"
+ui: "Calendar inspector band."
+sources:
+  - "JCGM 101 (GUM supplement 1)"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

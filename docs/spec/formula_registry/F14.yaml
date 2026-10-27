@@ -1,0 +1,29 @@
+id: F14
+name: "Poisson GLM with exposure offset"
+family: "Calibration between sensors"
+layer: "L1"
+status_v1: T
+status_v2: "REVISE"
+purpose: "Model-based exchange rate with honest uncertainty, using real exposure (valid observations) as the offset instead of MODIS counts."
+equation_v1: "\\log \\mathbb{E}[V_m] = \\log M_m + \\beta,\\qquad \\hat k = e^{\\hat\\beta}"
+equation_v2: "\\log\\mu_{s,r,t} = \\log E_{s,r,t} + \\alpha_r + \\gamma_s + x^{\\top}\\beta,\\ \\ Y\\sim\\mathrm{NegBin}(\\mu,\\theta);\\ \\ \\hat k=e^{\\hat\\gamma_V-\\hat\\gamma_M}"
+inputs:
+  - {symbol: "E", meaning: "exposure for that sensor", unit: "valid cell-days"}
+  - {symbol: "\u03b3_s", meaning: "sensor effect", unit: "log scale"}
+  - {symbol: "\u03b8", meaning: "NB dispersion", unit: "-"}
+assumptions:
+  - "Both sensors see the same latent activity in a stratum (paired design)."
+  - "Covariates x (day/night, season, view geometry) explain sensitivity differences."
+audit: {verdict: "REVISE", finding: "RUN here: intercept-only Poisson GLM with offset log M gives exactly \u03a3V/\u03a3M (2.6000 = 2.6000). It is the ratio of totals, not a different 'confirmation' of F11. Using MODIS counts as exposure is errors-in-variables and breaks at M=0. v2 uses exposure offsets and a sensor term."}
+worked_example: "V=[25,52,9,100,61], M=[10,20,3,40,22] \u2192 k = 247/95 = 2.600."
+pseudocode: |
+  glm(Y ~ C(sensor) + C(region) + C(dn), offset=log(E), family=NB)
+edge_cases:
+  - "Check Pearson dispersion; if >1.5 switch to NB or quasi-Poisson."
+tests:
+  - "intercept-only offset GLM == ratio of totals (RUN)"
+ui: "Sensor Lab model panel."
+sources:
+  - "McCullagh & Nelder, GLM"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

@@ -1,0 +1,27 @@
+id: F20
+name: "Detection-probability curve (FRP50)"
+family: "Calibration between sensors"
+layer: "L1"
+status_v1: T
+status_v2: "FIX"
+purpose: "Explains why k > 1: MODIS misses small fires that VIIRS sees. Uses near-simultaneous matched pairs (Aqua vs S-NPP within ~15 min)."
+equation_v1: "P(\\text{MODIS detects}\\mid \\mathrm{FRP}) = \\frac{1}{1 + e^{-(\\mathrm{FRP}-\\mathrm{FRP}_{50})/s}}"
+equation_v2: "\\operatorname{logit}P(D_M=1\\mid F_V)=\\beta_0+\\beta_1\\ln F_V+\\beta_2\\,\\theta+\\dots,\\ \\ \\mathrm{FRP}_{50}=e^{-\\beta_0/\\beta_1}\\ (\\text{at }\\theta=0)"
+inputs:
+  - {symbol: "F_V", meaning: "VIIRS FRP of the matched fire", unit: "MW"}
+  - {symbol: "\u03b8", meaning: "view angle", unit: "deg"}
+assumptions:
+  - "VIIRS detection used as the reference label (it also misses fires: ascertainment bias)."
+audit: {verdict: "FIX", finding: "Printed equation is logistic in FRP; uploaded code fits log(FRP). Pick one (log form, because FRP is skewed) and publish FRP50 = exp(\u2212\u03b2\u2080/\u03b2\u2081)."}
+worked_example: "\u03b2\u2080 = \u22124.4, \u03b2\u2081 = 2.0 \u2192 FRP50 = e^{2.2} = 9.0 MW (teaching, SIMULATED)."
+pseudocode: |
+  LogisticRegression on [log(frp_v), view_angle]
+edge_cases:
+  - "VIIRS I4 saturation (~8% of day fire pixels) biases high FRP."
+tests:
+  - "FRP50 recovered on simulated data within 10%"
+ui: "Sensor Lab detection curve."
+sources:
+  - "Schroeder et al. 2014"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

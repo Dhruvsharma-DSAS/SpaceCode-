@@ -1,0 +1,6 @@
+label,meaning
+OFFICIAL_DOCUMENTED,Matches a first-party NASA/NOAA/ESA/GEE page or peer-reviewed paper; URL + access date stored
+SOURCE_DERIVED,Computed deterministically from an official dataset (e.g. cell areas from Natural Earth polygons)
+RUN_TESTED_LOCALLY,Code executed here on stated inputs; synthetic unless the input is real
+SIMULATED_DEMO,Synthetic numbers for layout or method tests; never a result
+PROPOSED_UNVALIDATED,Idea or method not yet validated on held-out real data

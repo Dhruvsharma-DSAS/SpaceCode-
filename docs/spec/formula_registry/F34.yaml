@@ -1,0 +1,26 @@
+id: F34
+name: "PELT multiple change points"
+family: "Trends and seam tests"
+layer: "Validation"
+status_v1: P
+status_v2: "REVISE"
+purpose: "Find all jump points (2012 S-NPP, 2018 NOAA-20, 2023 NOAA-21, processing changes)."
+equation_v1: "\\min_{\\tau}\\ \\sum_{i} \\mathcal{C}\\!\\left(x_{(\\tau_{i-1}+1):\\tau_i}\\right) + \\beta\\,|\\tau|"
+equation_v2: "\\text{Poisson/NB segment cost on monthly exposure rates; penalty } \\beta = \\text{BIC} \\cdot \\log n\\ \\text{declared before running}"
+inputs:
+  - {symbol: "\u03b2", meaning: "penalty", unit: "-"}
+assumptions:
+  - "Penalty fixed in advance."
+audit: {verdict: "REVISE", finding: "Choose cost for counts (not rbf by default); fix penalty before seeing results to avoid tuning to a story."}
+worked_example: "Expect breaks near platform additions in raw counts, none after harmonisation."
+pseudocode: |
+  ruptures.Pelt(model='l2').fit(y).predict(pen=pen)
+edge_cases:
+  - "Seasonality must be removed first."
+tests:
+  - "synthetic two-break series recovered"
+ui: "Validation event study."
+sources:
+  - "Killick et al. 2012"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

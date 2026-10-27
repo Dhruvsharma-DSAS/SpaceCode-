@@ -1,0 +1,26 @@
+id: F08
+name: "Persistence (static-source mask)"
+family: "Time, space and counting"
+layer: "L2"
+status_v1: E
+status_v2: "FIX"
+purpose: "Share of observed days a site was hot over several years; high values point to kilns, flares, industry or volcanoes, which should not drive the agricultural calendar or calibration."
+equation_v1: "p_g = \\frac{\\text{active days}_g}{\\text{total days}}"
+equation_v2: "p_g = \\frac{\\sum_d c_{g,d}}{\\sum_d \\mathbb{1}[\\text{valid}_{g,d}]},\\quad p_g = \\text{NULL if denominator}=0"
+inputs:
+  - {symbol: "valid", meaning: "day with usable observation", unit: "-"}
+assumptions:
+  - "Threshold 0.20 is a hypothesis to fit on labelled sites."
+audit: {verdict: "FIX", finding: "RUN here: v1 persistence(0, 0) returns 0.0 (no activity) instead of unknown. Denominator should be observed days, not calendar days."}
+worked_example: "Kiln: 300 hot of 365 observed \u2192 0.82; paddy cell: 7 of 365 \u2192 0.02."
+pseudocode: |
+  p = active / observed if observed > 0 else None
+edge_cases:
+  - "Multi-year window crossing a sensor change mixes detection sensitivities: compute per sensor."
+tests:
+  - "persistence(0,0) is None"
+ui: "Source page evidence card."
+sources:
+  - "SIH FIREWORK rules"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

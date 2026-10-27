@@ -1,0 +1,27 @@
+id: F10
+name: "Monthly overlap ratio"
+family: "Calibration between sensors"
+layer: "L1"
+status_v1: E
+status_v2: "FIX"
+purpose: "Exploratory per-stratum ratios of VIIRS to MODIS cell-days during real overlap; inputs to diagnostics, not the final estimator."
+equation_v1: "k_m = \\frac{V_m}{M_m}\\quad (m \\in \\text{overlap 2012\u20132025})"
+equation_v2: "k_{r,\\sigma,y} = \\frac{V_{r,\\sigma,y}}{M_{r,\\sigma,y}}\\ \\ \\text{only for strata }\\sigma=(\\text{month},\\delta,\\text{platform pair})\\text{ with both sensors observing}"
+inputs:
+  - {symbol: "V, M", meaning: "VIIRS and MODIS cell-days on the same cells/days", unit: "count"}
+  - {symbol: "\u03c3", meaning: "stratum", unit: "-"}
+assumptions:
+  - "Same cells, same days, same exposure for both sensors."
+audit: {verdict: "FIX", finding: "v1 silently drops months with M=0 (a VIIRS=9 month vanished in the test) and treats all post-2012 years as one pool. Pair real overlapping periods and platforms (Aqua\u2194S-NPP afternoon; Terra has no VIIRS partner)."}
+worked_example: "v1 test: M=[10,20,0,40], V=[25,52,9,100] \u2192 ratios 2.5, 2.6, 2.5 \u2192 2.5; the zero month is lost."
+pseudocode: |
+  pairs = join(modis, viirs, on=[cell, date, dn]); ratio per stratum
+edge_cases:
+  - "Ratio of small integers is lumpy: 1\u21923 gives 3.0, 2\u21923 gives 1.5."
+tests:
+  - "no stratum with M=0 is silently removed: it is counted in a 'dropped' table"
+ui: "Sensor Lab bar chart of k by month with n shown."
+sources:
+  - "Book 2 overlap_ratio"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

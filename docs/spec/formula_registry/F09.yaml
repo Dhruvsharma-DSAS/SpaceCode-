@@ -1,0 +1,30 @@
+id: F09
+name: "Clear-sky (exposure) fire rate"
+family: "Time, space and counting"
+layer: "L1 / L4"
+status_v1: T
+status_v2: "REVISE"
+purpose: "Fire cell-days per valid observation day. Removes the cloud effect so a cloudy November is not mistaken for a quiet November."
+equation_v1: "r_{g,m} = \\frac{F_{g,m}}{K_{g,m}}"
+equation_v2: "r_{s,g,m} = \\frac{F_{s,g,m}}{E_{s,g,m}},\\ \\ E = \\#\\{\\text{days with FireMask}\\in\\{3,5,7,8,9\\}\\},\\ \\ r = \\text{NULL if } E=0"
+inputs:
+  - {symbol: "F", meaning: "fire cell-days", unit: "count"}
+  - {symbol: "E", meaning: "valid observable cell-days for the same platform", unit: "count"}
+  - {symbol: "K", meaning: "old name for E", unit: "-"}
+assumptions:
+  - "Exposure from the 1 km daily composite (MOD14A1/VNP14A1) approximates opportunity for FIRMS point detections; record the mismatch."
+  - "One valid composite day may contain several passes: it is one opportunity, not several."
+audit: {verdict: "REVISE", finding: "Correct at K=0 \u2192 None (v1 test). v2 makes E platform-specific, defines which FireMask classes count (6 'unknown' is not clear), and stores E alongside every rate."}
+worked_example: "30 fire days / 600 valid cell-days = 0.05 (v1 test, RUN here)."
+pseudocode: |
+  E = count(FireMask in {3,5,7,8,9}); r = F/E if E > 0 else None
+edge_cases:
+  - "Thick smoke can be flagged as cloud \u2192 exposure falls exactly when burning peaks."
+tests:
+  - "rate(30,600)=0.05"
+  - "rate(5,0)=None"
+ui: "Calendar 'exposure rate' metric; Explorer 'valid days 22/30'."
+sources:
+  - "GEE MOD14A1/VNP14A1 catalogue, FireMask classes (verified 27 Oct 2026)"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

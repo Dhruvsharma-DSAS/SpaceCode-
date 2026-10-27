@@ -1,0 +1,27 @@
+id: F42
+name: "Distance-decay exposure (IE / AE)"
+family: "Source attribution and blind spot"
+layer: "L2"
+status_v1: P
+status_v2: "REVISE"
+purpose: "How much industrial vs agricultural context surrounds a detection."
+equation_v1: "\\mathrm{IE}_g = \\sum_{f\\in\\text{industry}} e^{-d_{g,f}/L},\\qquad \\mathrm{AE}_g = \\sum_{c\\in\\text{crop}} e^{-d_{g,c}/L}"
+equation_v2: "\\mathrm{IE}_g=\\sum_f S_f\\,e^{-d_{g,f}/L},\\ \\ L\\ \\text{fitted on labelled sites};\\ \\ \\text{NULL if OSM coverage unknown}"
+inputs:
+  - {symbol: "L", meaning: "decay length", unit: "km"}
+  - {symbol: "S_f", meaning: "feature weight", unit: "-"}
+assumptions:
+  - "OSM completeness; in India kilns are under-mapped."
+audit: {verdict: "REVISE", finding: "Two versions exist (smooth exp vs SIH steps 1/0.5/0.2). Pick one; L and weights are hypotheses. Missing OSM must be NULL, not 0."}
+worked_example: "Refinery S=5 at 300 m, factory S=3 at 1 km (L=1 km) \u2192 IE = 5e^{-0.3}+3e^{-1} = 4.81."
+pseudocode: |
+  sum(S*exp(-d/L))
+edge_cases:
+  - "Area features vs points: use distance to polygon edge."
+tests:
+  - "monotone in distance"
+ui: "Source evidence card."
+sources:
+  - "SIH framework PDF"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

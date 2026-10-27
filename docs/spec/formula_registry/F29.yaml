@@ -1,0 +1,26 @@
+id: F29
+name: "Season start, peak and end (10/90%)"
+family: "Anomalies and seasons"
+layer: "L4"
+status_v1: E
+status_v2: "REVISE"
+purpose: "Critical-period dates for the problem statement: when does the burning season open, peak and close?"
+equation_v1: "t_{\\mathrm{start}} = \\min\\{t : S(t) \\ge 0.10\\,S_{\\mathrm{tot}}\\},\\quad t_{\\mathrm{end}} = \\min\\{t : S(t)\\ge 0.90\\,S_{\\mathrm{tot}}\\}"
+equation_v2: "\\text{same, on a declared season window } [t_a,t_b]\\ \\text{(e.g. 15 Sep\u201331 Dec), weekly bins; NULL if any bin unobserved}"
+inputs:
+  - {symbol: "S(t)", meaning: "cumulative detected activity", unit: "cell-days"}
+assumptions:
+  - "Detected activity timing \u2248 burning timing (false when burning shifts after overpasses)."
+audit: {verdict: "REVISE", finding: "Dates depend on the window and on detection timing; they are dates of detected activity, not ignition dates. Declare the window; null when gaps."}
+worked_example: "weekly [0,1,2,10,30,40,10,5,2,0] \u2192 start 3, peak 5, end 6 (RUN)."
+pseudocode: |
+  c = cumsum(w); start = argmax(c >= .1*total)
+edge_cases:
+  - "Two seasons (rabi/kharif) need two windows."
+tests:
+  - "v1 test passes; gaps \u2192 None"
+ui: "Calendar season band."
+sources:
+  - "Book 3 \u00a73.4"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

@@ -1,0 +1,26 @@
+id: F22
+name: "Quantile mapping"
+family: "Calibration between sensors"
+layer: "L1 (FRP only)"
+status_v1: T
+status_v2: "REVISE"
+purpose: "Maps MODIS FRP distribution onto VIIRS's for distribution-level comparisons."
+equation_v1: "x' = F_V^{-1}\\!\\left(F_M(x)\\right)"
+equation_v2: "x' = F_V^{-1}(F_M(x))\\ \\text{ fitted per stratum on matched overlap; extrapolation beyond training range flagged}"
+inputs:
+  - {symbol: "F", meaning: "empirical CDF", unit: "-"}
+assumptions:
+  - "Distributions stable over time."
+audit: {verdict: "REVISE", finding: "Quantile mapping forces the old era's distribution to look like the new one and can erase real extremes or trends in the tails; never apply to cell-day counts, and flag values outside the training range."}
+worked_example: "MODIS median 25 MW \u2192 VIIRS median 9 MW."
+pseudocode: |
+  np.interp(F_M(x), qV_probs, qV_values)
+edge_cases:
+  - "Ties at FRP floor."
+tests:
+  - "median maps to median"
+ui: "Sensor Lab advanced tab."
+sources:
+  - "Climate bias-correction literature"
+changelog:
+  - '2026-10-27 V2 audit: REVISE'

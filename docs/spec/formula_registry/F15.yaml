@@ -1,0 +1,27 @@
+id: F15
+name: "Negative-binomial variance"
+family: "Calibration between sensors"
+layer: "L1"
+status_v1: P
+status_v2: "RUN / TESTED LOCALLY"
+purpose: "Fire counts arrive in bursts (spatial clustering, weather), so intervals from a Poisson model are too narrow."
+equation_v1: "\\operatorname{Var}(V) = \\mu + \\frac{\\mu^2}{\\theta}"
+equation_v2: "\\operatorname{Var}(Y) = \\mu + \\frac{\\mu^2}{\\theta},\\ \\ \\hat\\phi_{\\mathrm{Pearson}} = \\frac{1}{n-p}\\sum\\frac{(y-\\hat\\mu)^2}{\\hat\\mu}\\ \\text{decides Poisson vs NB}"
+inputs:
+  - {symbol: "\u03b8", meaning: "dispersion (smaller = more bursty)", unit: "-"}
+  - {symbol: "\u03c6", meaning: "Pearson dispersion", unit: "-"}
+assumptions:
+  - "Overdispersion is constant within a stratum."
+audit: {verdict: "OK + RULE", finding: "Correct. Add the decision rule: compute \u03c6\u0302; NB if \u03c6\u0302 > 1.5. RUN here on the small example: \u03c6\u0302 = 0.16 (under-dispersed toy data \u2014 real data must decide)."}
+worked_example: "\u03bc=100, \u03b8=10 \u2192 Var = 100 + 1000 = 1100, SD 33 (Poisson SD 10)."
+pseudocode: |
+  phi = sum((y-mu)**2/mu)/(n-p)
+edge_cases:
+  - "\u03b8 \u2192 \u221e returns Poisson."
+tests:
+  - "NB SD \u2265 Poisson SD"
+ui: "Validation page 'dispersion' tile."
+sources:
+  - "Hilbe, Negative Binomial Regression"
+changelog:
+  - '2026-10-27 V2 audit: OK + RULE'

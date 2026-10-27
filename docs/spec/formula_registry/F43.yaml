@@ -1,0 +1,26 @@
+id: F43
+name: "Context log-ratio L"
+family: "Source attribution and blind spot"
+layer: "L2"
+status_v1: E
+status_v2: "OK"
+purpose: "One signed context number for the classifier."
+equation_v1: "L_g = \\ln\\frac{\\mathrm{IE}_g + 1}{\\mathrm{AE}_g + 1}"
+equation_v2: "L_g=\\ln\\frac{\\mathrm{IE}_g+1}{\\mathrm{AE}_g+1}\\ (+=\\text{industry});\\ \\ \\text{a feature, not a label}"
+inputs:
+  - {symbol: "L", meaning: "log ratio", unit: "-"}
+assumptions:
+  - "+1 pseudo-count choice changes small values."
+audit: {verdict: "OK", finding: "Sign convention fixed (old deck had it inverted and a wrong 1.46 example; correct ln(6/4) = 0.405, RUN)."}
+worked_example: "IE 6.5, AE 2.5 \u2192 ln(7.5/3.5) = 0.762."
+pseudocode: |
+  log((ie+1)/(ae+1))
+edge_cases:
+  - "Both missing \u2192 NULL."
+tests:
+  - "l_context(5,3)=ln1.5"
+ui: "Source evidence 'L'."
+sources:
+  - "CLAUDE.md fix"
+changelog:
+  - '2026-10-27 V2 audit: OK'

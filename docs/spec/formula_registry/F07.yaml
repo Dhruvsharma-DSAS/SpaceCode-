@@ -1,0 +1,29 @@
+id: F07
+name: "Equal-confidence filter"
+family: "Time, space and counting"
+layer: "L1"
+status_v1: P
+status_v2: "FIX"
+purpose: "Applies a documented, sensor-native quality rule before counting, and tests how much the harmonised answer depends on it."
+equation_v1: "\\mathrm{keep}_i = \\mathbb{1}[q_i \\ge \\tau_s],\\quad \\tau_{\\mathrm{MODIS}} = 30,\\ \\tau_{\\mathrm{VIIRS}} = \\text{nominal}"
+equation_v2: "\\mathrm{keep}_i = \\mathbb{1}[\\,\\mathrm{class}_i \\in \\mathcal{Q}_s\\,],\\ \\ \\mathcal{Q}\\ \\text{chosen from a sensitivity grid}\\ \\{\\text{MODIS}\\ge 0,30,50,80\\}\\times\\{\\text{l,n,h};\\ \\text{n,h};\\ \\text{h}\\}"
+inputs:
+  - {symbol: "q", meaning: "MODIS confidence 0\u2013100 (experimental per FIRMS)", unit: "%"}
+  - {symbol: "class", meaning: "VIIRS l / n / h", unit: "category"}
+assumptions:
+  - "MODIS 30 and VIIRS 'nominal' are not proven to be the same strictness."
+audit: {verdict: "FIX", finding: "v1 maps VIIRS l/n/h to 0.25/0.6/0.9 and UI says 'same confidence 0.6 both sensors'. These numbers are labels, not calibrated probabilities. Keep categories; report results for several filter pairs and pick by held-out agreement."}
+worked_example: "Grid of 4 MODIS \u00d7 3 VIIRS rules \u2192 12 k estimates; show the spread as filter uncertainty."
+pseudocode: |
+  for mt in [0,30,50,80]:
+    for vq in [{'l','n','h'},{'n','h'},{'h'}]:
+      k[mt,vq] = fit(filter(df, mt, vq))
+edge_cases:
+  - "Low-confidence VIIRS includes many real small fires; dropping them changes k."
+tests:
+  - "UI never displays '0.6' as a VIIRS probability"
+ui: "Explorer confidence control becomes a named rule picker."
+sources:
+  - "FIRMS notes: MODIS confidence experimental"
+changelog:
+  - '2026-10-27 V2 audit: FIX'

@@ -1,0 +1,5 @@
+code,meaning,use_v2
+0,presumed vegetation fire,keep
+1,active volcano,exclude from crop calendar
+2,other static land source,exclude from calibration; keep in source layer
+3,offshore,exclude

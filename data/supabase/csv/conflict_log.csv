@@ -1,0 +1,16 @@
+conflict_id,topic,old_position,new_position,evidence,decision,tradeoff,status
+C-01,FIRMS Area API DAY_RANGE,Book 2 + user audit: 1-5 days; code MAX_DAYS_PER_CALL=5,Area API page fetched 27 Oct 2026 shows 1-10,WebFetch of firms.modaps.eosdis.nasa.gov/api/area/csv,"Keep 5 as default (valid under both), make it config FIRMS_DAY_RANGE",slightly more calls,RESOLVED (reversible)
+C-02,Sensor colours,Home amber MODIS / cyan VIIRS; data pages blue MODIS / orange VIIRS,"One semantic palette proposed: MODIS amber, VIIRS cyan everywhere, dark-surface tints #FFB547/#3DD6F5, light-surface #A86A00/#0B7F99",CLAUDE_CODE_PROMPT.md OPEN item; accessibility check in Ch. 25,PROPOSED: unify on amber/cyan; needs user approval,data-page mock-ups must be recoloured,OPEN (user decision)
+C-03,F24 interval level,Spec: 95% (2.5-97.5),Book 3 + code: 5-95 (90%),Ch. 13 F24 audit run,Explicit alpha parameter; UI legend states level,-,RESOLVED
+C-04,F27 scale,code: raw counts; atlas: ln(1+x); visual guide: ln(rate),"log((F+0.5)/(E+1)), leave-target-out",ln(0) fails (audit run),Adopt v2,z values change; re-run fixtures,RESOLVED (pending real-data check)
+C-05,F14 meaning,described as an independent check of F11,intercept-only offset GLM equals ratio of totals,audit run 2.6000 = 2.6000,Rename B3b 'ratio of totals'; GLM proper uses exposure offset,-,RESOLVED
+C-06,Layer 4 name,Atlas: 'Your-data Studio',Strategy: unusual/trend,Four_Layers_Check.md,"L4 = 'Is this month unusual or trending?'; Studio is a tool, not a layer",-,RESOLVED
+C-07,Formula families,Build Spec says 8 families,tables list 7 groups,CLAUDE_CODE_PROMPT.md,7 families,-,RESOLVED
+C-08,MODIS end dates,Build Spec: Terra Jan 2027,NASA (Dec 2025): end of science Feb 2027; CAMS (Feb 2026): data collection Jan 2027; Aqua Sep 2027,pages fetched,Show both with source and as-of date,-,RESOLVED
+C-09,VIIRS confidence numbers,UI 'nominal (0.6) same rule both sensors',categorical sensor-native classes,F07 audit,Remove numeric label,UI copy change on locked Explorer,OPEN (touches locked page copy)
+C-10,B ratio meaning,'B = 2.4 means real burning ~2x the dots',B is a disagreement flag,F46 audit; MCD64A1 uses active fire,Flag only,less dramatic story,RESOLVED
+C-11,Calendar zeros,calendar_matrix fill_value=0,null + status,audit run,mask-aware cells,-,RESOLVED
+C-12,Grid area claim,'0.1 deg cell ~ 106 km2' used as if constant,area varies 123.6 (equator) to 0.1 km2 (pole),F04 run,store area per cell,-,RESOLVED
+C-13,Explorer 60 fps claim,Build Spec: 60 fps at 100k cells,Final contract measured 60 fps on ~hundreds of cells only,Final_Design_and_Data_Contract.md,Claim only what was measured,-,OPEN (measure)
+C-14,Overpass times,fixed Terra 10:30 / Aqua 13:30,Terra ~10:15 by fall 2022 (NASA),NASA Terra article,use observed acq_time per year,-,RESOLVED
+C-15,Formula IDs in chats,"chat walkthroughs: 'F09 calibration', 'F16 bootstrap'","registry: F09 exposure rate, F16 delta interval, F24 bootstrap",recovered decisions,"alias table, IDs never used alone",-,RESOLVED

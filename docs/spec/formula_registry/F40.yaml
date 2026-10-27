@@ -1,0 +1,26 @@
+id: F40
+name: "Haversine distance"
+family: "Fusion and AI"
+layer: "L2"
+status_v1: P
+status_v2: "RUN / TESTED LOCALLY"
+purpose: "Distances for clustering and industrial/agricultural context."
+equation_v1: "d = 2R\\arcsin\\sqrt{\\sin^2\\tfrac{\\Delta\\varphi}{2} + \\cos\\varphi_1\\cos\\varphi_2\\sin^2\\tfrac{\\Delta\\lambda}{2}}"
+equation_v2: "\\text{same, } R=6371.0088\\ \\mathrm{km};\\ \\text{for} <1\\ \\mathrm{km\\ precision\\ use\\ geodesic\\ (Karney)}"
+inputs:
+  - {symbol: "R", meaning: "Earth radius", unit: "km"}
+assumptions:
+  - "Sphere (0.3% error)."
+audit: {verdict: "OK", finding: "RUN here: Ludhiana\u2013Amritsar \u2248 124 km (doc 125)."}
+worked_example: "(30.901,75.857) \u2192 (31.634,74.872): 124 km."
+pseudocode: |
+  chronos_core.haversine_km
+edge_cases:
+  - "Antipodal points numerically fine with asin form."
+tests:
+  - "d(p,p)=0, symmetric"
+ui: "Source evidence 'nearest kiln 0.8 km'."
+sources:
+  - "Sinnott 1984"
+changelog:
+  - '2026-10-27 V2 audit: OK'

@@ -1,0 +1,27 @@
+id: F06
+name: "Monthly cell-day count"
+family: "Time, space and counting"
+layer: "L1"
+status_v1: E
+status_v2: "FIX"
+purpose: "Region-month total of fire cell-days per platform, the basic count shown in the raw calendar."
+equation_v1: "C_{g,m} = \\sum_{d \\in m} c_{g,d}"
+equation_v2: "C_{s,r,m} = \\sum_{g \\in r} \\sum_{d \\in m} c_{s,g,d},\\ \\ \\text{value} = \\text{NULL if } E_{s,r,m}\\ \\text{unknown}"
+inputs:
+  - {symbol: "r", meaning: "region (set of cells)", unit: "-"}
+  - {symbol: "E", meaning: "exposure (F09)", unit: "valid cell-days"}
+assumptions:
+  - "Region membership uses region_cell with fractions; for counts use cell centre or fraction \u22650.5 consistently."
+audit: {verdict: "FIX (structural)", finding: "v1 monthly_counts groups by sensor\u00d7year\u00d7month only, with no region/cell key; the calendar builder then fills absent months with 0. Absent = unknown, not zero."}
+worked_example: "Punjab Nov: S-NPP 14 cell-days in cell 1209_2558; region total = sum over 512 cells."
+pseudocode: |
+  monthly = cell_days.merge(region_cell).groupby([region, platform, month]).sum()
+edge_cases:
+  - "Months before a platform's archive start must be NULL, not 0."
+tests:
+  - "months with no exposure \u2192 status 'unavailable'"
+ui: "Calendar raw mode; Explorer time strip."
+sources:
+  - "v1 Book 2 listing 5.1"
+changelog:
+  - '2026-10-27 V2 audit: FIX (structural)'

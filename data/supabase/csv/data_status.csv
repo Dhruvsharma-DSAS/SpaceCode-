@@ -1,0 +1,7 @@
+status,meaning
+LIVE_NRT,FIRMS near-real-time feed fetched in the last 24 h
+ARCHIVE_STANDARD,FIRMS standard processing (SP) archive
+CACHED,last good copy served because the source failed; shows its observation date
+SIMULATED,demo fixture
+UNAVAILABLE,source failed and no cache; value stays null
+USER,user-uploaded data
