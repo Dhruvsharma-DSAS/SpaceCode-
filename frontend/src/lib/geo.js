@@ -70,3 +70,61 @@ export function nearestPoint(points, lat, lon, maxKm) {
   });
   return best;
 }
+
+function ringContains(ring, lon, lat) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i, i = i + 1) {
+    const xi = ring[i][0];
+    const yi = ring[i][1];
+    const xj = ring[j][0];
+    const yj = ring[j][1];
+    if (yi > lat !== yj > lat && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) {
+      inside = !inside;
+    }
+  }
+  return inside;
+}
+
+function polygonContains(rings, lon, lat) {
+  if (!ringContains(rings[0], lon, lat)) {
+    return false;
+  }
+  for (let k = 1; k < rings.length; k = k + 1) {
+    if (ringContains(rings[k], lon, lat)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+export function countryAt(features, lat, lon) {
+  const found = (features || []).find((f) => {
+    const g = f.geometry;
+    if (!g) {
+      return false;
+    }
+    if (g.type === "Polygon") {
+      return polygonContains(g.coordinates, lon, lat);
+    }
+    if (g.type === "MultiPolygon") {
+      return g.coordinates.some((poly) => polygonContains(poly, lon, lat));
+    }
+    return false;
+  });
+  if (!found) {
+    return null;
+  }
+  return found.properties;
+}
+
+export function isDaylight(lat, lon, sun) {
+  const p1 = (lat * Math.PI) / 180;
+  const p2 = (sun.lat * Math.PI) / 180;
+  const dl = ((lon - sun.lon) * Math.PI) / 180;
+  const cosAngle = Math.sin(p1) * Math.sin(p2) + Math.cos(p1) * Math.cos(p2) * Math.cos(dl);
+  return cosAngle > 0;
+}
+
+export function inBbox(point, bbox) {
+  return point.lon >= bbox[0] && point.lon <= bbox[2] && point.lat >= bbox[1] && point.lat <= bbox[3];
+}

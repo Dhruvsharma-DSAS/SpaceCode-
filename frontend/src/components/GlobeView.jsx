@@ -27,12 +27,22 @@ function hexLabelHtml(hex) {
   return '<div class="globe-tip"><b>' + hex.points.length + " detections</b><br/>in this hexagon (H3 res 3)</div>";
 }
 
-function makeSatelliteElement(sat) {
+function makeHtmlElement(d) {
   const element = document.createElement("div");
+  element.style.pointerEvents = "none";
+  if (d.kind === "pin") {
+    element.className = "pin-card";
+    element.innerHTML = d.html;
+    return element;
+  }
   element.className = "sat-label";
-  element.style.color = PLATFORM_COLORS[sat.id] || "#ffffff";
-  element.textContent = "● " + sat.short;
+  element.style.color = PLATFORM_COLORS[d.id] || "#ffffff";
+  element.textContent = "● " + d.short;
   return element;
+}
+
+function pushHtml(g) {
+  g.htmlElementsData(g.__fcHtml.sats.concat(g.__fcHtml.pin));
 }
 
 function shortName(sat) {
@@ -109,7 +119,7 @@ export default function GlobeView(props) {
       .htmlLat("lat")
       .htmlLng("lon")
       .htmlAltitude("alt")
-      .htmlElement(makeSatelliteElement)
+      .htmlElement(makeHtmlElement)
       .htmlTransitionDuration(900)
       .ringLat("lat")
       .ringLng("lon")
@@ -127,6 +137,7 @@ export default function GlobeView(props) {
     }
     resize();
     window.addEventListener("resize", resize);
+    g.__fcHtml = { sats: [], pin: [] };
     setGlobe(() => g);
     return () => {
       window.removeEventListener("resize", resize);
@@ -301,12 +312,13 @@ export default function GlobeView(props) {
     const satellites = props.satellites || [];
     if (!layers.tracks || satellites.length === 0) {
       globe.pathsData([]);
-      globe.htmlElementsData([]);
+      globe.__fcHtml.sats = [];
+      pushHtml(globe);
       return undefined;
     }
     function tick() {
-      const now = new Date();
-      globe.htmlElementsData(buildSatPositions(satellites, now));
+      globe.__fcHtml.sats = buildSatPositions(satellites, new Date());
+      pushHtml(globe);
     }
     globe.pathsData(buildTracks(satellites, new Date()));
     tick();
@@ -335,52 +347,79 @@ export default function GlobeView(props) {
     if (props.selected) {
       rings.push({ lat: props.selected.lat, lon: props.selected.lon });
     }
+    if (props.pin) {
+      rings.push({ lat: props.pin.lat, lon: props.pin.lon });
+    }
     globe.ringsData(rings);
-  }, [globe, props.points, props.layers, props.selected, props.ringCount]);
+  }, [globe, props.points, props.layers, props.selected, props.ringCount, props.pin]);
+
+  useEffect(() => {
+    if (!globe) {
+      return;
+    }
+    let pin = [];
+    if (props.pin) {
+      pin = [{ kind: "pin", lat: props.pin.lat, lon: props.pin.lon, alt: 0.012, html: props.pin.html }];
+    }
+    globe.__fcHtml.pin = pin;
+    pushHtml(globe);
+  }, [globe, props.pin]);
 
   useEffect(() => {
     if (!globe) {
       return;
     }
     const points = props.points || [];
+    const reach = props.pickKm || 150;
+    function report(coords, point, hex) {
+      if (!coords) {
+        return;
+      }
+      let found = point;
+      if (!found) {
+        found = nearestPoint(points, coords.lat, coords.lng, reach);
+      }
+      if (props.onProbe) {
+        props.onProbe({ lat: coords.lat, lon: coords.lng, point: found, hex: hex || null });
+        return;
+      }
+      if (props.onSelect) {
+        props.onSelect(found);
+      }
+    }
     globe.onPointClick((point, event, coords) => {
-      if (!props.onSelect) {
-        return;
-      }
       if (point && typeof point.lat === "number") {
-        props.onSelect(point);
+        report({ lat: point.lat, lng: point.lon }, point, null);
         return;
       }
-      if (coords) {
-        props.onSelect(nearestPoint(points, coords.lat, coords.lng, props.pickKm || 150));
-      }
+      report(coords, null, null);
     });
-    globe.onGlobeClick((coords) => {
-      if (!props.onSelect) {
-        return;
+    globe.onGlobeClick((coords) => report(coords, null, null));
+    globe.onPolygonClick((polygon, event, coords) => report(coords, null, null));
+    globe.onHexClick((hex, event, coords) => {
+      let first = null;
+      if (hex.points.length > 0) {
+        first = hex.points[0];
       }
-      const found = nearestPoint(points, coords.lat, coords.lng, props.pickKm || 150);
-      props.onSelect(found);
-    });
-    globe.onPolygonClick((polygon, event, coords) => {
-      if (props.onSelect && coords) {
-        props.onSelect(nearestPoint(points, coords.lat, coords.lng, props.pickKm || 150));
+      let at = coords;
+      if (!at && first) {
+        at = { lat: first.lat, lng: first.lon };
       }
+      report(at, first, hex.points);
     });
-    globe.onHexClick((hex) => {
-      if (props.onSelect && hex.points.length > 0) {
-        props.onSelect(hex.points[0]);
-      }
-    });
-  }, [globe, props.points, props.onSelect, props.pickKm]);
+  }, [globe, props.points, props.onSelect, props.onProbe, props.pickKm]);
 
   useEffect(() => {
     if (!globe || !props.selected) {
       return;
     }
     globe.controls().autoRotate = false;
-    globe.pointOfView({ lat: props.selected.lat, lng: props.selected.lon, altitude: 1.25 }, 1200);
-  }, [globe, props.selected]);
+    if (props.keepCamera) {
+      return;
+    }
+    const pov = globe.pointOfView();
+    globe.pointOfView({ lat: props.selected.lat, lng: props.selected.lon, altitude: Math.min(pov.altitude, 2.0) }, 900);
+  }, [globe, props.selected, props.keepCamera]);
 
   useEffect(() => {
     if (!globe || !props.flyTo) {

@@ -15,29 +15,31 @@ import Brief from "./pages/Brief.jsx";
 import Health from "./pages/Health.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
-function DataShell() {
+const ROUTES = [
+  ["/explore", Explorer, "explore"],
+  ["/calendar/:region", Calendar, "explore"],
+  ["/calendar", Calendar, "explore"],
+  ["/sensors", SensorLab, "explore"],
+  ["/sources", Sources, "explore"],
+  ["/blind-spot", BlindSpot, "explore"],
+  ["/validation", Validation, "trust"],
+  ["/formulas/:id", Formulas, "trust"],
+  ["/formulas", Formulas, "trust"],
+  ["/sources/health", Health, "trust"],
+  ["/studio", Studio, "data"],
+  ["/me", Workspace, "data"],
+  ["/brief/:id", Brief, "data"],
+  ["/brief", Brief, "data"],
+  ["/learn", Learn, "learn"],
+];
+
+function Shell(props) {
+  const Page = props.page;
   return (
     <div className="app">
-      <TopBar />
+      <TopBar group={props.group} />
       <main className="main">
-        <Routes>
-          <Route path="/explore" element={<Explorer />} />
-          <Route path="/calendar/:region" element={<Calendar />} />
-          <Route path="/calendar" element={<Calendar />} />
-          <Route path="/sensors" element={<SensorLab />} />
-          <Route path="/studio" element={<Studio />} />
-          <Route path="/formulas/:id" element={<Formulas />} />
-          <Route path="/formulas" element={<Formulas />} />
-          <Route path="/validation" element={<Validation />} />
-          <Route path="/sources" element={<Sources />} />
-          <Route path="/blind-spot" element={<BlindSpot />} />
-          <Route path="/learn" element={<Learn />} />
-          <Route path="/me" element={<Workspace />} />
-          <Route path="/brief/:id" element={<Brief />} />
-          <Route path="/brief" element={<Brief />} />
-          <Route path="/sources/health" element={<Health />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Page />
       </main>
     </div>
   );
@@ -47,7 +49,10 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/*" element={<DataShell />} />
+      {ROUTES.map((r) => (
+        <Route key={r[0]} path={r[0]} element={<Shell page={r[1]} group={r[2]} />} />
+      ))}
+      <Route path="*" element={<Shell page={NotFound} group="" />} />
     </Routes>
   );
 }

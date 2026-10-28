@@ -2,33 +2,33 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchJson } from "../api/client.js";
 
-const LINKS = [
-  ["/", "Home"],
-  ["/explore", "Explorer"],
-  ["/calendar/world", "Calendar"],
-  ["/sensors", "Sensor Lab"],
-  ["/studio", "Data Studio"],
-  ["/formulas", "Formulas"],
-  ["/validation", "Validation"],
-  ["/sources", "Sources"],
-  ["/blind-spot", "Blind Spot"],
-  ["/learn", "Learn"],
+const GROUPS = [
+  { id: "explore", label: "Explore", pages: [
+    ["/explore", "Explorer", "globe"],
+    ["/calendar/world", "Calendar", "month × year"],
+    ["/sensors", "Sensor Lab", "MODIS vs VIIRS"],
+    ["/sources", "Sources", "what burns"],
+    ["/blind-spot", "Blind Spot", "missed fires"],
+  ] },
+  { id: "trust", label: "Trust", pages: [
+    ["/validation", "Validation", "gates G1–G12"],
+    ["/formulas", "Formulas", "F01–F46"],
+    ["/sources/health", "Source Health", "feeds"],
+  ] },
+  { id: "data", label: "Your data", pages: [
+    ["/studio", "Data Studio", "upload"],
+    ["/me", "Workspace", "saved views"],
+    ["/brief/punjab_haryana", "Brief", "print"],
+  ] },
+  { id: "learn", label: "Learn", pages: [
+    ["/learn", "Learn", "6 lessons"],
+  ] },
 ];
 
-const PAGES = [
-  ["/", "Home", "story"],
-  ["/explore", "Explorer", "globe"],
-  ["/calendar/world", "Calendar", "month × year"],
-  ["/sensors", "Sensor Lab", "k by stratum"],
-  ["/studio", "Data Studio", "your data"],
-  ["/formulas", "Formulas", "F01–F46"],
-  ["/validation", "Validation", "gates"],
-  ["/sources", "Sources", "what is burning"],
-  ["/blind-spot", "Blind Spot", "overpass clock"],
-  ["/learn", "Learn", "lessons"],
-  ["/me", "Workspace", "saved views"],
-  ["/brief/punjab_haryana", "Research Brief", "print"],
-  ["/sources/health", "Source Health", "status"],
+const SOURCES = [
+  ["SIMULATED", "Demo", "Simulated fixtures: no key yet, numbers are not results"],
+  ["ARCHIVE_STANDARD", "Archive", "Standard-processing archive from the backend"],
+  ["LIVE_NRT", "Live", "Near-real-time NASA FIRMS feed"],
 ];
 
 function readTheme() {
@@ -54,8 +54,10 @@ function Palette(props) {
     }
   }, []);
 
+  const all = [["/", "Home", "story"]];
+  GROUPS.forEach((g) => g.pages.forEach((p) => all.push(p)));
   const q = query.trim().toLowerCase();
-  const matches = PAGES.filter((page) => {
+  const matches = all.filter((page) => {
     if (!q) {
       return true;
     }
@@ -98,7 +100,7 @@ function Palette(props) {
   );
 }
 
-export default function TopBar() {
+export default function TopBar(props) {
   const [theme, setTheme] = useState(readTheme());
   const [status, setStatus] = useState("SIMULATED");
   const [open, setOpen] = useState(false);
@@ -166,18 +168,17 @@ export default function TopBar() {
     themeLabel = "☾";
   }
 
-  const SOURCES = [
-    ["SIMULATED", "Demo", "Simulated fixtures: no key yet, numbers are not results"],
-    ["ARCHIVE_STANDARD", "Archive", "Standard-processing archive from the backend"],
-    ["LIVE_NRT", "Live", "Near-real-time NASA FIRMS feed"],
-  ];
   let activeIndex = 0;
   SOURCES.forEach((source, i) => {
     if (source[0] === status) {
       activeIndex = i;
     }
   });
-  const activeTitle = SOURCES[activeIndex][2];
+
+  let current = GROUPS.find((g) => g.id === props.group);
+  if (!current) {
+    current = GROUPS[0];
+  }
 
   let palette = null;
   if (open) {
@@ -185,41 +186,55 @@ export default function TopBar() {
   }
 
   return (
-    <header className="topbar">
-      <NavLink to="/" className="brand">
-        <img src="/logo_mark.png" alt="" />
-        <div>
-          <b>FIREWORK CHRONOS</b>
-          <small>EARTH INTELLIGENCE ATLAS</small>
-        </div>
-      </NavLink>
-      <nav className="nav" aria-label="Main">
-        {LINKS.map((link) => (
-          <NavLink key={link[0]} to={link[0]} end={link[0] === "/"}>
-            {link[1]}
-          </NavLink>
-        ))}
-      </nav>
-      <div className="spacer" />
-      <div className={"srcswitch at-" + activeIndex} role="status" aria-label={"Data source: " + SOURCES[activeIndex][1]} title={activeTitle}>
-        <span className="srcswitch-k">Source</span>
-        <div className="srcswitch-track">
-          {SOURCES.map((source, i) => {
+    <header className="tb">
+      <div className="tb-row">
+        <NavLink to="/" className="tb-brand" aria-label="FIREWORK CHRONOS home">
+          <img src="/logo_mark.png" alt="" />
+          <span><b>FIREWORK</b><small>CHRONOS · FIRE RECORD</small></span>
+        </NavLink>
+        <nav className="tb-pill" aria-label="Sections">
+          <NavLink to="/" end>Home</NavLink>
+          {GROUPS.map((g) => {
             let cls = "";
-            if (i === activeIndex) {
+            if (g.id === props.group) {
               cls = "on";
             }
-            return <span key={source[0]} className={cls}>{source[1]}</span>;
+            return <NavLink key={g.id} to={g.pages[0][0]} className={cls}>{g.label}</NavLink>;
           })}
-          <i className="srcswitch-bar" />
+        </nav>
+        <div className="tb-tools">
+          <button className="kfield" onClick={() => setOpen(true)} aria-label="Search pages">
+            <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" strokeWidth="1.4" /><path d="M11 11l3.5 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" /></svg>
+            <span className="kfield-t">Jump to…</span>
+            <kbd>⌘K</kbd>
+          </button>
+          <button className="iconbtn" onClick={switchTheme} aria-label="Switch colour theme">{themeLabel}</button>
         </div>
       </div>
-      <button className="kfield" onClick={() => setOpen(true)} aria-label="Search pages">
-        <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" strokeWidth="1.4" /><path d="M11 11l3.5 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" /></svg>
-        <span className="kfield-t">Jump to…</span>
-        <kbd>⌘K</kbd>
-      </button>
-      <button className="iconbtn" onClick={switchTheme} aria-label="Switch colour theme">{themeLabel}</button>
+      <div className="tb-sub">
+        <nav className="tb-pages" aria-label={current.label + " pages"}>
+          <span className="tb-group">{current.label}</span>
+          {current.pages.map((p) => (
+            <NavLink key={p[0]} to={p[0]}>
+              {p[1]}
+              <small>{p[2]}</small>
+            </NavLink>
+          ))}
+        </nav>
+        <div className={"srcswitch at-" + activeIndex} role="status" aria-label={"Data source: " + SOURCES[activeIndex][1]} title={SOURCES[activeIndex][2]}>
+          <span className="srcswitch-k">Source</span>
+          <div className="srcswitch-track">
+            {SOURCES.map((source, i) => {
+              let cls = "";
+              if (i === activeIndex) {
+                cls = "on";
+              }
+              return <span key={source[0]} className={cls}>{source[1]}</span>;
+            })}
+            <i className="srcswitch-bar" />
+          </div>
+        </div>
+      </div>
       {palette}
     </header>
   );
